@@ -1,0 +1,4 @@
+package t1
+
+const a: int = 3
+const b = "aaa"

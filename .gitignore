@@ -3,3 +3,13 @@
 
 # Ignore Gradle build output directory
 build
+bin
+.project
+.settings/org.eclipse.buildship.core.prefs
+.vscode/settings.json
+miod_parser/.classpath
+miod_parser/.settings/org.eclipse.buildship.core.prefs
+miod_parser/src/main/antlr/org/miod/parser/generated/.antlr/Miod.interp
+miod_parser/src/main/antlr/org/miod/parser/generated/.antlr/Miod.tokens
+miod_parser/src/main/antlr/org/miod/parser/generated/.antlr/MiodLexer.interp
+miod_parser/src/main/antlr/org/miod/parser/generated/.antlr/MiodLexer.tokens
