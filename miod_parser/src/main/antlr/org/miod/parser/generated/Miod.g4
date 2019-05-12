@@ -28,7 +28,7 @@ globalStatements: globalStmt+;
 
 boolExpr: TRUE | FALSE;
 
-constDecl: docs? CONST name=ID (COLON type=typeSpec)? ASSIGN expr;
+constDecl: docs? CONST name=ID (COLON type=typeSpec)? ASSIGN NEWLINE? expr;
 
 expr: literal
     | ID;

@@ -8,6 +8,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -16,13 +18,17 @@ import org.junit.Test;
 import org.miod.parser.ParserUtils;
 import org.miod.parser.ParsingErrorListener;
 import org.miod.parser.generated.MiodBaseListener;
+import org.miod.parser.generated.MiodParser.CommentsContext;
+import org.miod.parser.generated.MiodParser.DocsContext;
 import org.miod.parser.generated.MiodParser.UnitHeaderContext;
 
 public class ParsingTests {
     private final static Logger LOGGER = Logger.getLogger(ParsingTests.class.getName());
 
-    class MyParseTreeListener extends MiodBaseListener {
+    static class MyParseTreeListener extends MiodBaseListener {
         public String pkgName = "";
+        public final List<String> comments = new ArrayList<>();
+        public final List<String> docs = new ArrayList<>();
 
         MyParseTreeListener() {
         }
@@ -30,6 +36,16 @@ public class ParsingTests {
         @Override
         public void exitUnitHeader(UnitHeaderContext ctx) {
             pkgName = ctx.bareName().ID().getText();
+        }
+
+        @Override
+        public void exitComments(CommentsContext ctx) {
+            comments.add(ctx.getText());            
+        }
+
+        @Override
+        public void exitDocs(DocsContext ctx) {
+            docs.add(ctx.getText());
         }
     }
 
@@ -45,6 +61,8 @@ public class ParsingTests {
         ParseTreeWalker.DEFAULT.walk(listener, tree);
 
         assertEquals("t1", listener.pkgName);
+        assertEquals("# comments1\n", listener.comments.get(0));
+        assertEquals("## docs1\n", listener.docs.get(0));
     }
 
 }

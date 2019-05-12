@@ -6,4 +6,5 @@ package t1
 ## docs2
 const a: int = 3
 #comments3
-const b = "aaa"
+const b = 
+    "aaa"
