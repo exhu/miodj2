@@ -1,4 +1,9 @@
+# comments1
+## docs1
 package t1
 
+# comments2
+## docs2
 const a: int = 3
+#comments3
 const b = "aaa"

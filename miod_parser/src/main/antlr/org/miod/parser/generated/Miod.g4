@@ -1,6 +1,6 @@
 grammar Miod;
 
-compUnit: unitHeader unitBody EOF;
+compUnit: comments? docs? unitHeader unitBody EOF;
 
 unitHeader: PACKAGE bareName NEWLINE;
 
@@ -8,6 +8,9 @@ namespaceSep: DOT;
 memberAccess: DOT;
 bareName: ID;
 qualifName: pkg=ID namespaceSep sym=ID;
+
+comments: COMMENT+;
+docs: DOC_COMMENT+;
 
 unitBody: globalStatements?;
 
@@ -17,6 +20,7 @@ importDecl: IMPORT path=STRING;
 
 globalStmt:
     constDecl NEWLINE
+    | comments
     | NEWLINE
     ;
 
@@ -24,7 +28,7 @@ globalStatements: globalStmt+;
 
 boolExpr: TRUE | FALSE;
 
-constDecl: CONST name=ID (COLON type=typeSpec)? ASSIGN expr;
+constDecl: docs? CONST name=ID (COLON type=typeSpec)? ASSIGN expr;
 
 expr: literal
     | ID;
@@ -49,8 +53,8 @@ fragment NL: ('\r'? '\n');
 NEWLINE: NL;
 // comments
 
-//DOC_COMMENT: '##' .*? (NEWLINE|EOF) -> channel(2);
-//COMMENT: '#' .*? (NEWLINE|EOF) -> channel(3);
+DOC_COMMENT: '##' .*? NL;
+COMMENT: '#' .*? NL;
 
 //
 WS: (' ' | '\t')+ -> skip;

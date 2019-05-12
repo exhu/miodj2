@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
+import org.miod.parser.ParserUtils;
 import org.miod.parser.ParsingErrorListener;
 import org.miod.parser.generated.MiodBaseListener;
 import org.miod.parser.generated.MiodParser.UnitHeaderContext;
@@ -35,7 +36,7 @@ public class ParsingTests {
     @Test
     public void testSyntax1() throws IOException {
         ParsingErrorListener errListener = new ParsingErrorListener();
-        ParseTree tree = TestUtils.parseSyntax(TestUtils.getStreamFromResource("t1.miod"), errListener);
+        ParseTree tree = ParserUtils.parseSyntax(ParserUtils.getStreamFromResource("t1.miod"), errListener);
 
         assertNotNull(tree);
         assertTrue(errListener.getErrors().isEmpty());
