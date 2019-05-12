@@ -16,7 +16,7 @@ docs: DOC_COMMENT+;
 buildTags: buildTag+;
 
 // logical OR or all tags in the list
-buildTag: cond=BUILD_FOR tagsList NEWLINE;
+buildTag: BUILD_FOR tagsList NEWLINE;
 tagsList: STRING (COMMA STRING)*;
 
 unitBody: globalStatements?;
