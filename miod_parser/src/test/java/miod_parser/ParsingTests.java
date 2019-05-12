@@ -18,7 +18,8 @@ public class ParsingTests {
     public void testSyntax1() throws IOException {
         ParsingErrorListener errListener = new ParsingErrorListener();
         ParseTree tree = TestUtils.parseSyntax(TestUtils.getStreamFromResource("t1.miod"), errListener);
-        assertTrue(tree != null);
+        assertNotNull(tree);
+        assertTrue(errListener.getErrors().isEmpty());
     }
 
 }

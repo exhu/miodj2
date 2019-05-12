@@ -16,23 +16,15 @@ unitBody: globalStatements?;
 importDecl: IMPORT path=STRING;
 
 globalStmt:
-    importDecl NEWLINE
-    | globalStaticIf NEWLINE
-    | constDecl NEWLINE
-    | methodImpl NEWLINE
-    ;
-
-// Semantic phase must evaluate expressions to calculate static_if
-
-globalStaticIf:
-    STATIC_IF boolExpr THEN globalStatements? (ELSE)? END_IF
+    constDecl NEWLINE
+    | NEWLINE
     ;
 
 globalStatements: globalStmt+;
 
 boolExpr: TRUE | FALSE;
 
-constDecl: CONST name=ID (type=typeSpec)? ASSIGN expr;
+constDecl: CONST name=ID (COLON type=typeSpec)? ASSIGN expr;
 
 expr: literal
     | ID;
@@ -53,17 +45,17 @@ procBody: ;
 //// lexer --------------
 
 fragment NL: ('\r'? '\n');
+
+NEWLINE: NL;
 // comments
 
-DOC_COMMENT: '##' .*? (NEWLINE|EOF) -> channel(2);
-COMMENT: '#' .*? (NEWLINE|EOF) -> channel(3);
-
-NEWLINE: NL+ -> channel(HIDDEN);
+//DOC_COMMENT: '##' .*? (NEWLINE|EOF) -> channel(2);
+//COMMENT: '#' .*? (NEWLINE|EOF) -> channel(3);
 
 //
 WS: (' ' | '\t')+ -> skip;
 
-JOIN_LINE: '\\' NEWLINE -> skip;
+//JOIN_LINE: '\\' NEWLINE -> skip;
 
 
 // keywords
