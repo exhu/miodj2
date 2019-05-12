@@ -8,6 +8,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.MalformedInputException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -15,6 +18,7 @@ import java.util.logging.Logger;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
+import org.miod.parser.AstBuilder;
 import org.miod.parser.ParserUtils;
 import org.miod.parser.ParsingErrorListener;
 import org.miod.parser.generated.MiodBaseListener;
@@ -40,7 +44,7 @@ public class ParsingTests {
 
         @Override
         public void exitComments(CommentsContext ctx) {
-            comments.add(ctx.getText());            
+            comments.add(ctx.getText());
         }
 
         @Override
@@ -63,6 +67,18 @@ public class ParsingTests {
         assertEquals("t1", listener.pkgName);
         assertEquals("# comments1\n", listener.comments.get(0));
         assertEquals("## docs1\n", listener.docs.get(0));
+    }
+
+    @Test
+    public void testAstBuilder() throws IOException, MalformedURLException {
+        ParsingErrorListener errListener = new ParsingErrorListener();
+        ParseTree tree = ParserUtils.parseSyntax(ParserUtils.getStreamFromResource("t1.miod"), errListener);
+
+        assertTrue(errListener.getErrors().isEmpty());
+
+        AstBuilder builder = new AstBuilder();
+        builder.parse(tree, new URL("file://t1.miod"));
+        assertEquals("t1", builder.getRoot().getPackageName());
     }
 
 }

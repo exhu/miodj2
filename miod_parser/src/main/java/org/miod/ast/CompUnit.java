@@ -6,4 +6,8 @@ public final class CompUnit extends AstNode {
         super(loc);
         this.packageName = packageName;
     }
+
+    public String getPackageName() {
+        return packageName;
+    }
 }
