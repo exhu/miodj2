@@ -9,12 +9,39 @@ modules.
 Parser
 ------
 
-Source code parsing and AST building library with semantic analysis.
+Source code parsing and AST building library with semantic analysis:
+
+    1) ANTLR -> ParseTree -- syntax check
+    2) Build tags only or complete AST
+    3) Semantic analysis -> Types, Symbols.
+
 
 Compiler
 --------
 
 TBD
+
+
+Code completion
+---------------
+
+TBD
+
+
+Refactoring tool
+----------------
+
+TBD
+
+
+Code formatter
+--------------
+
+AST->text
+
+TBD
+
+
 
 
 Older projects

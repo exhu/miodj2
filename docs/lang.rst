@@ -28,3 +28,18 @@ Features
 - annotations like in Java
 - RTTI, introspection, reflection
 - generics like in Java
+
+
+Build layout
+------------
+
+A package is a set of files (in single and subdirs if necessary).
+Each of the source files can refer to symbols defined in the other files
+of the package.
+
+After a package is built, an interface file is generated for public symbols
+(procs with empty bodies etc), a binary file, a list of build tags which
+affect the build process (all build tags listed in source files of the package)
+and the set list of set tags during the building process. If current tags
+do not match, the package is rebuilt.
+

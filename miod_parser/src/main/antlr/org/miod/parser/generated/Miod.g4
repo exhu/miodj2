@@ -1,8 +1,8 @@
 grammar Miod;
 
-compUnit: comments? docs? unitHeader unitBody EOF;
+compUnit: comments? unitHeader unitBody EOF;
 
-unitHeader: PACKAGE bareName NEWLINE;
+unitHeader: buildTags? docs? PACKAGE bareName NEWLINE;
 
 namespaceSep: DOT;
 memberAccess: DOT;
@@ -11,6 +11,13 @@ qualifName: pkg=ID namespaceSep sym=ID;
 
 comments: COMMENT+;
 docs: DOC_COMMENT+;
+
+// logical AND of all
+buildTags: buildTag+;
+
+// logical OR or all tags in the list
+buildTag: cond=BUILD_FOR tagsList NEWLINE;
+tagsList: STRING (COMMA STRING)*;
 
 unitBody: globalStatements?;
 
@@ -28,16 +35,12 @@ globalStatements: globalStmt+;
 
 boolExpr: TRUE | FALSE;
 
-constDecl: docs? CONST name=ID (COLON type=typeSpec)? ASSIGN NEWLINE? expr;
+constDecl: docs? PUBLIC? CONST name=ID (COLON type=typeSpec)? ASSIGN NEWLINE? expr;
 
 expr: literal
     | ID;
 
 literal: STRING | INTEGER | FLOAT;
-
-methodName: (pkg=ID namespaceSep)? clazz=ID namespaceSep name=ID;
-
-methodImpl: METHOD methodName argDecl NEWLINE procBody NEWLINE END_PROC;
 
 argDecl: OPEN_PAREN CLOSE_PAREN;
 
@@ -63,7 +66,11 @@ WS: (' ' | '\t')+ -> skip;
 
 
 // keywords
+PACKAGE: 'package';
 CONST: 'const';
+BUILD_FOR: 'build_for';
+PUBLIC: 'public';
+
 VAR: 'var';
 PROC: 'proc';
 METHOD: 'method';
@@ -73,14 +80,11 @@ END_PROC: 'end';
 IMPORT: 'import'; // items are accessible via fully qualified name only
 TYPE: 'type';
 OPAQUE: 'opaque';
-STATIC_IF: 'static_if';
 IF: 'if';
 THEN: 'then';
 ELSE: 'else';
 ELIF: 'elif';
 END_IF: 'end_if';
-PACKAGE: 'package';
-PUBLIC: 'public';
 PLUS: '+';
 MINUS: '-';
 DIV: '/';
