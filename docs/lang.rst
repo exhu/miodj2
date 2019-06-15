@@ -17,6 +17,7 @@ Features
 - lambdas
 - automatically reference counted objects (like in ObjC) with composition and
     interfaces (like in Golang but interfaces are implemented explicitly)
+- no inheritance
 - structures (value type) with desctructors, copy constructors
 - generic pointer type to interop with C (nothing can be done with pointer
     except to pass between C and Miod)
