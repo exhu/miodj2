@@ -1,6 +1,3 @@
-[-] AstBuilder -- build ast from t1.miod
-[-] migrate AST-related stuff from older projects
-[+] write a simple test for grammar
-
-
-
+- [-] AstBuilder -- build ast from t1.miod
+- [-] migrate AST-related stuff from older projects
+- [+] write a simple test for grammar
