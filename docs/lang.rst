@@ -29,6 +29,8 @@ Features
 - annotations like in Java
 - RTTI, introspection, reflection
 - generics like in Java
+- dispatch on first argument type
+    e.g. proc abs(a: int) -> "abs_int", proc abs(a: float) -> "abs_float"...
 
 
 Build layout
