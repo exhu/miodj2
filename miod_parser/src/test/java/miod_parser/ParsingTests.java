@@ -72,12 +72,13 @@ public class ParsingTests {
     @Test
     public void testAstBuilder() throws IOException, MalformedURLException {
         ParsingErrorListener errListener = new ParsingErrorListener();
-        ParseTree tree = ParserUtils.parseSyntax(ParserUtils.getStreamFromResource("t1.miod"), errListener);
+        URL url = ParserUtils.getUrlFromResource("t1.miod");
+        ParseTree tree = ParserUtils.parseSyntax(url.openStream(), errListener);
 
         assertTrue(errListener.getErrors().isEmpty());
 
         AstBuilder builder = new AstBuilder();
-        builder.parse(tree, new URL("file://t1.miod"));
+        builder.parse(tree, url);
         assertEquals("t1", builder.getRoot().getPackageName());
     }
 

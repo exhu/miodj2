@@ -2,6 +2,7 @@ package org.miod.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
@@ -18,6 +19,12 @@ public final class ParserUtils {
         return inputStream;
     }
 
+    public static URL getUrlFromResource(String fileName) {
+        ClassLoader classLoader = ParserUtils.class.getClassLoader();
+        URL url = classLoader.getResource(fileName);
+        return url;
+    }
+
     public static ParseTree parseSyntax(InputStream stream, ANTLRErrorListener listener) throws IOException {
         ParseTree tree;
         CharStream input = CharStreams.fromStream(stream);
@@ -32,4 +39,4 @@ public final class ParserUtils {
         tree = parser.compUnit();
         return tree;
     }
-} 
+}
