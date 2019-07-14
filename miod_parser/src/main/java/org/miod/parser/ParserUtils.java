@@ -8,7 +8,9 @@ import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.miod.ast.NodeLocation;
 import org.miod.parser.generated.MiodLexer;
 import org.miod.parser.generated.MiodParser;
 
@@ -38,5 +40,10 @@ public final class ParserUtils {
         // run parser
         tree = parser.compUnit();
         return tree;
+    }
+
+    public static NodeLocation locationFromContext(ParserRuleContext ctx, URL url) {
+        return new NodeLocation(new NodeLocation.Point(ctx.start.getLine(), ctx.start.getCharPositionInLine()),
+                new NodeLocation.Point(ctx.stop.getLine(), ctx.stop.getCharPositionInLine()), url);
     }
 }

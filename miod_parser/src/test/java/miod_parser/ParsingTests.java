@@ -10,7 +10,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.MalformedInputException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -79,6 +78,7 @@ public class ParsingTests {
 
         AstBuilder builder = new AstBuilder();
         builder.parse(tree, url);
+        LOGGER.info(builder.getRoot().getPackageName());
         assertEquals("t1", builder.getRoot().getPackageName());
     }
 
