@@ -1,3 +1,8 @@
+- [x] Comments to ast
+- [x] Docs to ast
+- [ ] Constant declaration to ast
 - [ ] AstBuilder -- build ast from t1.miod
+- [ ] Semantic pass
+- [ ] C backend
 - [ ] migrate AST-related stuff from older projects
 - [x] write a simple test for grammar

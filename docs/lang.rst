@@ -10,6 +10,7 @@ features in tandem with C for low-level features.
 Features
 --------
 
+- modules/packages
 - global vars
 - global procs
 - procs pointers
@@ -42,6 +43,9 @@ of the package.
 
 Compilation produces header files for public symbols and C sources for
 the implementation. CMake or other project description is generated as well.
+
+Full package name for package management and code generation consists of
+a *vendor* name, and a package *name*, declared with the package directive.
 
 
 For future:

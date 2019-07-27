@@ -1,10 +1,10 @@
 package org.miod.ast;
 
-abstract class AstNode extends BaseAstNode {
+public abstract class AstNode extends BaseAstNode {
     private final NodeLocation location;
 
     public AstNode(NodeLocation location) {
-        this.location = location;    
+        this.location = location;
     }
 
     public final NodeLocation getLocation() {

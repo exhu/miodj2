@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
+import org.miod.ast.Comment;
+import org.miod.ast.Doc;
 import org.miod.parser.AstBuilder;
 import org.miod.parser.ParserUtils;
 import org.miod.parser.ParsingErrorListener;
@@ -72,6 +74,7 @@ public class ParsingTests {
     public void testAstBuilder() throws IOException, MalformedURLException {
         ParsingErrorListener errListener = new ParsingErrorListener();
         URL url = ParserUtils.getUrlFromResource("t1.miod");
+        LOGGER.info(url.toExternalForm());
         ParseTree tree = ParserUtils.parseSyntax(url.openStream(), errListener);
 
         assertTrue(errListener.getErrors().isEmpty());
@@ -80,6 +83,10 @@ public class ParsingTests {
         builder.parse(tree, url);
         LOGGER.info(builder.getRoot().getPackageName());
         assertEquals("t1", builder.getRoot().getPackageName());
+        Comment comments = (Comment) builder.getRoot().getSubnodes().get(0);
+        Doc docs = (Doc) builder.getRoot().getSubnodes().get(1);
+        assertEquals("# comments1\n", comments.getText());
+        assertEquals("## docs1\n## doc1 line2\n", docs.getText());
     }
 
 }
