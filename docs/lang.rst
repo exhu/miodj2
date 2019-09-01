@@ -55,3 +55,123 @@ a list of build tags which affect the build process (all build tags listed
 in source files of the package) and the set list of set tags during the
 building process. If current tags do not match, the package is rebuilt.
 
+mmiodj language notes
+=====================
+
+This is a work in progress notes, and ideas, which will become a readable
+document later.
+
+mmiodj is planned to be used in tight symbiosis with C. It is a high level
+counterpart.  All performance critical code is implemented in C, but overall
+architecture of a program is implemented in mmiodj that's why the aim of the
+project is to implement a simple high level programming language with least
+possible memory and cpu footprint yet delivering near to zero overhead in
+interoperation with C. Future easier interop with Java is also a side goal.
+
+OOP
+---
+
+The language is inspired by Java, C++ practices in the projects I worked on
+(computer games).  Also some ideas from Nim, Go, Pascal.
+
+Like Java mmiodj has single entity description and data reference type -- a
+object/interface instance (which are almost the same). Unlike Java there's no
+garbage collection yet reference counting and manual weak references are used,
+so it's not that safe at all yet has predictable reproducible performance.
+
+Most primitive types are used to interop with C and for performance reasons:
+integers, floats, pointers, structures...
+
+Structure value type is supported with pass-by-reference for arguments.
+Lambdas/closures are supported. Coroutines support.
+
+Objects do not support inheritance, but useful composition mechanics are
+provided.
+
+Object types and weak refs can be nullable, they need access only in a
+guarded block:
+
+::
+
+    type A = object
+        var b: Object?
+        proc dosmth(myobj: MyObject?)
+            retain(myobj, b)
+                myobj.doSmth()
+            else
+                print("failed to retain all")
+            end_retain
+        end
+
+    type Hash = interface() # aggregated interfaces in the braces
+        proc hash(): i32, override
+    end_interface
+
+    type Myobject = object(Hash, Equals, ListenerHolder) # implemented interfaces are listed in the braces
+        // const + @_no_heap makes it preallocated as part of object
+        // if ref counter of such field in finalization
+        @_no_heap
+        const holder: ListenerHolderImpl implements(ListenerHolder)
+        # - dispatches ListenerHolder interface methods to this instance
+
+        # optional default constructor (must not accept arguments)
+        proc init()
+        end
+
+        # optional desctructor,
+        # called before field objects reference decremented
+        proc finalize()
+        end
+
+        proc hash(): int, override
+            return 3
+        end
+
+        var f_stuff: bool
+
+        property stuff get(f_stuff),set(set_stuff)
+
+        proc set_stuff(b: bool)
+            f_stuff = b
+        end
+
+    end_object
+
+    proc do()
+        # some object can be stack-allocated to optimize memory usage, if ref
+        # counter is not 1 at exit from the function
+        # then program aborts with the message
+        # only consts to objects can be @_no_heap
+        @_no_heap
+        const myobj: Object
+    end
+
+
+Simplified overload/override/method syntax
+------------------------------------------
+
+::
+
+    type A = object(Hashable)
+            var b: Object?
+    end_object
+
+    # method implementation, compulsory for interface implementations.
+    # allows access into fields for objects of type specified as the first argument.
+    method hash(myobj: MyObject): i32
+        return b == null ? 0 : 1
+    end
+
+    # error, object field 'b' is not accessible in procs, only in methods to emphasize encapsulation.
+    # procs can be called on objects both as dosmth(o) and o.dosmth()
+    proc dosmth(o: MyObject): bool
+       return o.b == null
+    end
+
+    proc hash(i: i32): i32
+        return i
+    end
+
+    proc hash(i: i64): i32
+        return cast<i32>(i & 0xFFFFFFFF)
+    end
