@@ -95,16 +95,19 @@ guarded block:
 
     type A = object
         var b: Object?
-        proc dosmth(myobj: MyObject?)
-            retain(myobj, b)
-                myobj.doSmth()
-            else
-                print("failed to retain all")
-            end_retain
-        end
+    end_object
+
+    proc dosmth(myobj: MyObject?)
+        retain(myobj, myobj.b)
+            myobj.doSmth()
+        else
+            print("failed to retain all")
+        end_retain
+    end
 
     type Hash = interface() # aggregated interfaces in the braces
-        proc hash(): i32, override
+        proc hash(): i32
+        property stuff get, set
     end_interface
 
     type Myobject = object(Hash, Equals, ListenerHolder) # implemented interfaces are listed in the braces
@@ -123,19 +126,21 @@ guarded block:
         proc finalize()
         end
 
-        proc hash(): int, override
-            return 3
-        end
-
         var f_stuff: bool
 
-        property stuff get(f_stuff),set(set_stuff)
-
-        proc set_stuff(b: bool)
-            f_stuff = b
-        end
+        property stuff get(f_stuff),set(set_stuff), impl
 
     end_object
+
+    # 'impl' means interface implementation
+    proc hash(o: Myobject): int, impl
+        return 3
+    end
+
+    proc set_stuff(o: Myobject, b: bool)
+        o.f_stuff = b
+    end
+
 
     proc do()
         # some object can be stack-allocated to optimize memory usage, if ref
@@ -158,11 +163,10 @@ Simplified overload/override/method syntax
 
     # method implementation, compulsory for interface implementations.
     # allows access into fields for objects of type specified as the first argument.
-    method hash(myobj: MyObject): i32
+    proc hash(myobj: MyObject): i32
         return b == null ? 0 : 1
     end
 
-    # error, object field 'b' is not accessible in procs, only in methods to emphasize encapsulation.
     # procs can be called on objects both as dosmth(o) and o.dosmth()
     proc dosmth(o: MyObject): bool
        return o.b == null
