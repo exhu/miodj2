@@ -69,7 +69,24 @@ proc m()
 end
 
 
-# TODO enums, string, integer mappings, attributes
+# enums, string, integer mappings, attributes
+
+type StrAnn = struct
+    var str, alt1, alt2: string
+end_struct
+
+type DayOfWeek = enum<int>
+    @StrAnn{str = literal(Monday), alt1 = "mon", alt2 = "monday"}
+    Monday = 1,
+    Tuesday,
+    Wednesday = 3
+end_enum
+
+type ShortDayOfWeek = enum<string>
+    Monday = "mon",
+    Tuesday = "tue",
+    Wednesday = "wed"
+end_enum
 
 # TODO bitsets, bit masks mappings, attributes
 
@@ -85,6 +102,7 @@ end
 # Either a) default constructor then _copy is called on assignment if defined, b) fields copied by assignment.
 type St = struct
     var c: int
+    property y:int, set(c), get(c)
 end_struct
 
 # optional copy constructor
