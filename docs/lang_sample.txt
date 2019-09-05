@@ -82,19 +82,35 @@ type DayOfWeek = enum<int>
     Wednesday = 3
 end_enum
 
+const Monday = cast<int>(DayOfWeek.Monday)
+const MondayAlt2 = DayOfWeek.Monday.@StrAnn.alt1
+
+# probably, will not be supported:
 type ShortDayOfWeek = enum<string>
     Monday = "mon",
     Tuesday = "tue",
     Wednesday = "wed"
 end_enum
 
-# TODO bitsets, bit masks mappings, attributes
+const Wed = cast<string>(ShortDayOfWeek.Wednesday)
 
-# TODO arrays
 
-# TODO union type?
+# bitsets
+# second argument ('u8') is optional
+type WorkingDaysMask = bitset<DayOfWeek, u8>
+const working_days = WorkingDaysMask(Monday, Wednesday)
 
-# TODO variant type?
+
+# arrays, copied on assignment, always have length accessible as .len property
+# dynamic array, uses heap
+var arr: array<int>
+
+# static array
+const arr2 = [1,2,3]
+
+# union type? can be implemented via properties
+
+# variant type? can be implemented via interfaces
 
 # 'struct' is a value type, directly mappable to C struct.
 # Compiler generates default constructor to set field values, then calls _init if it is defined.
