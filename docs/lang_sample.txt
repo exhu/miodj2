@@ -49,7 +49,25 @@ proc test_mod_div()
     (d,r) = mod_div(3,2)
 end
 
-# TODO lambdas
+# generic, works only with reference types (objects/interfaces)
+proc<Obj> weak(o: Obj?): weak<Obj>
+    return o
+end
+
+# lambdas
+proc m()
+    var b = 3
+    var obj = Object.new()
+
+    var a = proc[obj = weak(obj), b](a: int)
+        retain(obj)
+            obj.do_smth(b)
+        on_null
+            # null
+        end_retain
+    end
+end
+
 
 # TODO enums, string, integer mappings, attributes
 
