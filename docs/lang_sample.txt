@@ -1,0 +1,106 @@
+package mypkg
+import math
+# imported procs are either accesible via full name: math.abs, or via dot-notation on variable/literal: (-1).abs
+
+# integer type is signed 32-bit by default, signed 64-bit otherwise
+const a = 0x33
+const b: byte = 255
+public const c = "a string"
+var d = a + b
+const e = c + " another string"
+
+alias sqrt = math.sqrt
+
+alias i32 = int
+
+type Id = long
+
+# all 'proc' arguments are read-only except for 'var'.
+# dot-notation dispatches on exact type match by the first argument.
+# There can not be 'var' and non-var procs with same name. 
+
+proc abs(i: int): int
+    return i < 0 ? -i : i
+end
+
+# Error!
+proc abs(i: var int): int
+end
+
+# ok
+proc abs_var(i: var int): int
+end
+
+proc abs(i: long): long
+    return i < 0 ? -i : i
+end
+
+# multiple return values
+proc mod_div(a, b: int): (d, rem: int)
+    # either
+    d = a / b
+    rem = a % b
+    # or
+    return (a/b, a%b)
+end
+
+proc test_mod_div()
+    var d, r:int
+    (d,r) = mod_div(3,2)
+end
+
+# TODO lambdas
+
+# TODO enums, string, integer mappings, attributes
+
+# TODO bitsets, bit masks mappings, attributes
+
+# TODO arrays
+
+# TODO union type?
+
+# TODO variant type?
+
+# 'struct' is a value type, directly mappable to C struct.
+# Compiler generates default constructor to set field values, then calls _init if it is defined.
+# Compiler generates default destructor to clear referenced objects, _finalize is called before calling generated destructor.
+# Either a) default constructor then _copy is called on assignment if defined, b) fields copied by assignment.
+type St = struct
+    var c: int
+end_struct
+
+# optional copy constructor
+proc _copy(dest: var St, src: var St)
+    dest.c = src.c
+end
+
+# optional default constructor for St
+proc _init(s: var St)
+
+end
+
+# optional destructor for struct
+proc _finalize(s: var St)
+    s.c = 0xFEADFEAD
+end
+
+
+# 'object' is a referenced type with RTTI, interfaces etc.
+# Compiler generates default constructor to set field values, then calls _init if it is defined.
+# Compiler generates default destructor to clear referenced objects, _finalize is called before calling generated destructor.
+type Obj = object
+    var f: u32 = 3
+    property flags:u32, set(f), get(f)
+end_object
+
+# optional default constructor for Obj
+proc _init(o: Obj)
+
+end
+
+# optional destructor for object
+proc _finalize(o: Obj)
+    o.f = 0xFFFFFFFF
+end
+
+# TODO interfaces, delegations, attributes, retrospection, new instance/cloning etc.

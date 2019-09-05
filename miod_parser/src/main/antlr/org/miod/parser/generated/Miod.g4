@@ -73,7 +73,6 @@ PUBLIC: 'public';
 
 VAR: 'var';
 PROC: 'proc';
-METHOD: 'method';
 CPROC: 'cproc';
 RETURN: 'return';
 END_PROC: 'end';
