@@ -85,7 +85,7 @@ end_enum
 const Monday = cast<int>(DayOfWeek.Monday)
 const MondayAlt2 = DayOfWeek.Monday.@StrAnn.alt1
 
-# probably, will not be supported:
+# probably, will not be supported because of annotations:
 type ShortDayOfWeek = enum<string>
     Monday = "mon",
     Tuesday = "tue",
@@ -156,3 +156,6 @@ proc _finalize(o: Obj)
 end
 
 # TODO interfaces, delegations, attributes, retrospection, new instance/cloning etc.
+
+# Class is a reference type which is not Object instance, passed as raw pointer, lives in the static data,
+# provides access to attributes, new instance method.
