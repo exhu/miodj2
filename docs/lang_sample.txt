@@ -202,4 +202,19 @@ type Copy = interface<O>
     proc copy_from(dest: O, src: O)
 end_interface
 
-# TODO delegations, attributes, retrospection
+# Delegation (emulates inheritance).
+# Will not compile if two objects have the same methods implemented,
+# you need to define a proc with 'override' and manually call the implementation
+# Delegated objects cannot be nullable.
+type Obj = object(Copy, Hash, Equals)
+    var copy: CopyObject implements Copy
+    var hash: HashObject implements Hash
+    # error:
+    var nullable: SomeObject? implements Equals
+end_object
+
+# implement method of one of the interfaces, ignores implementation specified via 'implements'
+proc some_interface_method(o: Obj), override
+end
+
+# TODO attributes, retrospection
