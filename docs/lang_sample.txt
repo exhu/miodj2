@@ -155,7 +155,45 @@ proc _finalize(o: Obj)
     o.f = 0xFFFFFFFF
 end
 
-# TODO interfaces, delegations, attributes, retrospection, new instance/cloning etc.
 
 # Class is a reference type which is not Object instance, passed as raw pointer, lives in the static data,
 # provides access to attributes, new instance method.
+
+# Obj.new() -- shorthand for Obj._class.new()
+var o = Obj.new()
+var cls = o._class
+var new_inst = cls.new()
+
+# Object cloning is implemented via cls.new() + implementing Copy interface with 'copy_from' method.
+
+# 'Object' is a universal 'base' class/interface, it has only _class property available.
+# upcasting is possible only to nullable references.
+
+var o: Object = Obj.new()
+# ok
+var obj = cast<Obj?>(o)
+# error!
+var obj = cast<Obj>(o)
+# error! cannot access nullable references
+obj._class.new()
+# ok
+retain(obj)
+    obj._class.new()
+end_retain
+retain(obj)
+    obj._class.new()
+on_null
+    println("cannot upcast")
+end_retain
+
+# interfaces
+type Object = interface
+    # read-only property
+    property _class: Class, get
+end_interface
+
+type Copy = interface<O>
+    proc copy_from(dest: O, src: O)
+end_interface
+
+# TODO delegations, attributes, retrospection
