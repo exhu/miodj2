@@ -59,7 +59,8 @@ proc m()
     var b = 3
     var obj = Object.new()
 
-    var a = proc[obj = weak(obj), b](a: int)
+    # type of a is 'closure(a: int)', captured environment in brackets []:
+    var a = closure[obj = weak(obj), b](a: int)
         retain(obj)
             obj.do_smth(b)
         on_null
@@ -68,9 +69,14 @@ proc m()
     end
 end
 
+# generic closures
+# accepts only procs with argument objects which implement both 'Equals' and 'Hash' interfaces:
+type Comparator = closure<O implements(Equals, Hash)>(a, b: O)
+# accepts any object type as argument
+type OnClick = closure<O>(origin: O)
+
 
 # enums, string, integer mappings, attributes
-
 type StrAnn = struct
     var str, alt1, alt2: string
 end_struct
