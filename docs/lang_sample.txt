@@ -252,7 +252,7 @@ var new_inst = cls.new()
 # upcasting is possible only to nullable references.
 
 var o: Object = Obj.new()
-# ok
+# ok, null if fails to upcast
 var obj = cast<Obj?>(o)
 # error!
 var obj = cast<Obj>(o)
@@ -276,6 +276,13 @@ end_interface
 
 type Copy = interface<O>
     proc copy_from(dest: O, src: O)
+end_interface
+
+
+# Any is a value type which can contain anything: array, interface, integer, string...
+type DynArray = interface<A:Any>
+    proc get_at(i:int):A
+    proc set_at(item:A, i:int)
 end_interface
 
 # Delegation (emulates inheritance).
