@@ -1,5 +1,7 @@
 - [x] Comments to ast
 - [x] Docs to ast
+- [ ] Simplify lang. for only reference types, int, long, float, double, enum,
+    make it an optional script language too
 - [ ] Constant declaration to ast
 - [ ] AstBuilder -- build ast from t1.miod
 - [ ] Semantic pass
