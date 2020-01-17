@@ -11,7 +11,7 @@ Features
 --------
 
 - modules/packages
-- global vars
+- global consts
 - global procs
 - procs pointers
 - closures
@@ -19,17 +19,18 @@ Features
 - automatically reference counted objects (like in ObjC) with composition and
     interfaces (like in Golang but interfaces are implemented explicitly)
 - no inheritance
-- structures (value type) with desctructors, copy constructors
+- everything is a reference type (some magic optimizations for basic types),
+    evrything is an instance implementing basic interfaces.
+- operator overloading via interfaces (like Lua's metatables)
 - generic pointer type to interop with C (nothing can be done with pointer
     except to pass between C and Miod)
-- pass by reference args
 - multiple return values
 - multiple source files per package, single namespace (like in Golang)
 - conditional compilation like in Golang (tags-based)
 - coroutines (like in Lua)
 - annotations like in Java
 - RTTI, introspection, reflection
-- generics like in Java
+- generics like in Java, int/float types are also objects (like in Scala)
 - dispatch on first argument type
     e.g. proc abs(a: int) -> "abs_int", proc abs(a: float) -> "abs_float"...
 
@@ -72,7 +73,7 @@ OOP
 ---
 
 The language is inspired by Java, C++ practices in the projects I worked on
-(computer games).  Also some ideas from Nim, Go, Pascal.
+(computer games).  Also some ideas from Nim, Go, Pascal, Lua, Rust, Scala.
 
 Like Java mmiodj has single entity description and data reference type -- a
 object/interface instance (which are almost the same). Unlike Java there's no
@@ -80,27 +81,38 @@ garbage collection yet reference counting and manual weak references are used,
 so it's not that safe at all yet has predictable reproducible performance.
 
 Most primitive types are used to interop with C and for performance reasons:
-integers, floats, pointers, structures...
+integers, floats, pointers, C structures accessed via C functions.
 
-Structure value type is supported with pass-by-reference for arguments.
 Lambdas/closures are supported. Coroutines support.
 
 Objects do not support inheritance, but useful composition mechanics are
-provided.
+provided with automatic delegation.
 
 Object types and weak refs can be nullable, they need access only in a
-guarded block:
+guarded block with match-like constructs like in Rust/Scala:
 
 ::
 
     type A = object
-        var b: Object?
+        var b: Optional<MyObject>
     end_object
 
-    proc dosmth(myobj: MyObject?)
-        retain(myobj, myobj.b)
+    proc dosmth(a: A)
+        switch a.b.item.class
+        case MyObject
+            let myobj = cast<MyObject>(a.b.item)
             myobj.doSmth()
-        else
+        case EmptyObject
+            print("failed to retain all")
+        end_retain
+    end
+
+    # switch_class -- syntax sugar for switch on .class:
+    proc dosmth(a: A)
+        switch_class a.b.item
+        case MyObject as myobj
+            myobj.doSmth()
+        case EmptyObject
             print("failed to retain all")
         end_retain
     end
