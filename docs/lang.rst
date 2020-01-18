@@ -20,10 +20,11 @@ Features
     interfaces (like in Golang but interfaces are implemented explicitly)
 - no inheritance
 - everything is a reference type (some magic optimizations for basic types),
-    evrything is an instance implementing basic interfaces.
+    an instance implementing basic interfaces.
 - operator overloading via interfaces (like Lua's metatables)
 - generic pointer type to interop with C (nothing can be done with pointer
     except to pass between C and Miod)
+- no null pointers
 - multiple return values
 - multiple source files per package, single namespace (like in Golang)
 - conditional compilation like in Golang (tags-based)
@@ -38,7 +39,7 @@ Features
 Build layout
 ------------
 
-A package is a set of files (in single and subdirs if necessary).
+A package is a set of files.
 Each of the source files can refer to symbols defined in the other files
 of the package.
 
@@ -56,18 +57,19 @@ a list of build tags which affect the build process (all build tags listed
 in source files of the package) and the set list of set tags during the
 building process. If current tags do not match, the package is rebuilt.
 
-mmiodj language notes
+Language notes
 =====================
 
-This is a work in progress notes, and ideas, which will become a readable
+This is work in progress notes, and ideas, which will become a readable
 document later.
 
-mmiodj is planned to be used in tight symbiosis with C. It is a high level
+Miod is planned to be used in tight symbiosis with C. It is a high level
 counterpart.  All performance critical code is implemented in C, but overall
-architecture of a program is implemented in mmiodj that's why the aim of the
+architecture of a program is implemented in Miod that's why the aim of the
 project is to implement a simple high level programming language with least
 possible memory and cpu footprint yet delivering near to zero overhead in
 interoperation with C. Future easier interop with Java is also a side goal.
+Miod must be a viable scripting language too.
 
 OOP
 ---
@@ -75,20 +77,22 @@ OOP
 The language is inspired by Java, C++ practices in the projects I worked on
 (computer games).  Also some ideas from Nim, Go, Pascal, Lua, Rust, Scala.
 
-Like Java mmiodj has single entity description and data reference type -- a
+Like Java Miod has single entity description and data reference type -- a
 object/interface instance (which are almost the same). Unlike Java there's no
 garbage collection yet reference counting and manual weak references are used,
 so it's not that safe at all yet has predictable reproducible performance.
 
 Most primitive types are used to interop with C and for performance reasons:
-integers, floats, pointers, C structures accessed via C functions.
+integers, floats, pointers, C structures accessed via C functions. They look
+like reference types in the language, but are boxed/unboxed automatically for
+performance reasons.
 
 Lambdas/closures are supported. Coroutines support.
 
 Objects do not support inheritance, but useful composition mechanics are
 provided with automatic delegation.
 
-Object types and weak refs can be nullable, they need access only in a
+Object types and weak refs can be nullable, but they can be accessed only in a
 guarded block with match-like constructs like in Rust/Scala:
 
 ::
@@ -98,23 +102,23 @@ guarded block with match-like constructs like in Rust/Scala:
     end_object
 
     proc dosmth(a: A)
-        switch a.b.item.class
+        match a.b.item.class
         case MyObject
             let myobj = cast<MyObject>(a.b.item)
             myobj.doSmth()
         case EmptyObject
             print("failed to retain all")
-        end_retain
+        end_match
     end
 
-    # switch_class -- syntax sugar for switch on .class:
+    # syntax sugar for switch on .class:
     proc dosmth(a: A)
-        switch_class a.b.item
+        match_class a.b.item
         case MyObject as myobj
             myobj.doSmth()
         case EmptyObject
             print("failed to retain all")
-        end_retain
+        end_match
     end
 
     type Hash = interface() # aggregated interfaces in the braces
@@ -122,32 +126,29 @@ guarded block with match-like constructs like in Rust/Scala:
         property stuff get, set
     end_interface
 
-    type Myobject = object(Hash, Equals, ListenerHolder) # implemented interfaces are listed in the braces
+    # implemented interfaces are listed in the braces
+    type Myobject = object(Finalizable, Hash, Equals, ListenerHolder)
         // const + @_no_heap makes it preallocated as part of object
         // if ref counter of such field in finalization
         @_no_heap
         const holder: ListenerHolderImpl implements(ListenerHolder)
         # - dispatches ListenerHolder interface methods to this instance
 
-        # optional default constructor (must not accept arguments)
-        proc init()
-        end
-
-        # optional desctructor,
-        # called before field objects reference decremented
-        proc finalize()
-        end
-
         var f_stuff: bool
 
+        # impl means interface property implementation
         property stuff get(f_stuff),set(set_stuff), impl
-
     end_object
 
     # 'impl' means interface implementation
     proc hash(o: Myobject): int, impl
         return 3
     end
+
+    # called before field objects reference decremented
+    proc finalize(), impl
+    end
+
 
     proc set_stuff(o: Myobject, b: bool)
         o.f_stuff = b
@@ -170,18 +171,18 @@ Simplified overload/override/method syntax
 ::
 
     type A = object(Hashable)
-            var b: Object?
+            var b: Optional<Object>
     end_object
 
     # method implementation, compulsory for interface implementations.
     # allows access into fields for objects of type specified as the first argument.
     proc hash(myobj: MyObject): i32
-        return b == null ? 0 : 1
+        return b.isEmpty()
     end
 
     # procs can be called on objects both as dosmth(o) and o.dosmth()
     proc dosmth(o: MyObject): bool
-       return o.b == null
+       return o.b.isEmpty()
     end
 
     proc hash(i: i32): i32
