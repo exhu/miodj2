@@ -8,3 +8,4 @@
 - [ ] C backend
 - [ ] migrate AST-related stuff from older projects
 - [x] write a simple test for grammar
+- [ ] optimize primitive types (autoboxing)

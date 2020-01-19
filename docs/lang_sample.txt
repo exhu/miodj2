@@ -1,3 +1,5 @@
+OBSOLETE!
+
 package mypkg
 import math
 # imported procs are either accesible via full name: math.abs, or via dot-notation on variable/literal: (-1).abs

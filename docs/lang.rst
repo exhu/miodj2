@@ -97,7 +97,7 @@ guarded block with match-like constructs like in Rust/Scala:
 
 ::
 
-    type A = object
+    type A = class
         var b: Optional<MyObject>
     end_object
 
@@ -127,7 +127,7 @@ guarded block with match-like constructs like in Rust/Scala:
     end_interface
 
     # implemented interfaces are listed in the braces
-    type Myobject = object(Finalizable, Hash, Equals, ListenerHolder)
+    type Myobject = class(Finalizable, Hash, Equals, ListenerHolder)
         // const + @_no_heap makes it preallocated as part of object
         // if ref counter of such field in finalization
         @_no_heap
@@ -192,3 +192,86 @@ Simplified overload/override/method syntax
     proc hash(i: i64): i32
         return cast<i32>(i & 0xFFFFFFFF)
     end
+
+
+Type declaration
+----------------
+
+All values are of reference types:
+    - arithmetic(int, int64, float, double)
+    - class instance (either concrete or interface)
+        - enum constant instance
+
+::
+
+    type Arithmetic = interface()
+        proc plus(other: Arithmetic): Arithmetic
+        proc minus(other: Arithmetic): Arithmetic
+        proc mul(other: Arithmetic): Arithmetic
+        proc div(other: Arithmetic): Arithmetic
+        proc rem(other: Arithmetic): Arithmetic
+    end_interface
+
+    type Hash = interface()
+        prop hash: int, get
+    end
+
+    type Numeric = interface(Hash, Arithmetic)
+        proc sqrt(): Numeric
+        # zero constant
+        prop zero: Numeric, get
+    end_interface
+
+    # generic class
+    type Point<T: Numeric> = class(Hash)
+        # adds hidden fields automatically
+        prop x: T, get, set
+
+        var _y: T
+
+        # uses field _y to store the value
+        prop y: T, get(_y), set(_y)
+
+        prop len: T, get(calc_len)
+        prop hash: int, get(calc_hash), impl
+    end_class
+
+    private
+    proc calc_len<T:Numeric>(p: Point<T>): T
+        return sqrt(p.x*p.x + p._y*p._y)
+    end
+
+    proc calc_hash<T:Numeric>(p: Point<T>): int
+        return p.x.hash + p.y.hash
+    end
+
+    type Entity = interface()
+        prop id: int, get
+    end_interface
+
+    type DefEntity = class(Entity)
+        var _id: int
+        prop id: int, get(_id), impl
+    end_class
+
+    type Person = class(Entity)
+        var _def: DefEntity, delegate(Entity)
+    end_class
+
+    type IndexedCollection<T> = interface()
+        prop len: int, get
+        proc item_at(index: int): T
+    end_interface
+
+    type IndexedMutableCollection<T> = interface(IndexedCollection)
+        proc set_item_at(item: T, index: int): T
+    end_interface
+
+    type Array<T> = class(IndexedMutableCollection)
+    end_class
+
+    type Day = enum
+        Working,
+        Holiday
+    end_enum
+
