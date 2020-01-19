@@ -321,6 +321,26 @@ All values are of reference types:
     alias float = f32
     alias double = f64
 
+    type WeakRef<T> = interface(Finalize)
+        proc lock(): Optional<T>
+    end_class
+
+    # base for all interfaces
+    type Interface<T> = interface()
+        proc inc_ref()
+        proc dec_ref()
+        proc get_weak(): WeakRef<T>
+        proc unlink_weak(w: WeakRef<T>)
+        proc free_ref()
+
+        prop class: Class<T>, get
+    end_interface
+
+    type Class<T> = interface()
+        proc implements(i: Interface<T>)
+        prop name: string
+    end_interface
+
 
 Packages usage
 --------------
@@ -330,11 +350,11 @@ Packages usage
     import math
 
     proc myproc(a: float): float
-        return math.sqrt(a)
+        return math::sqrt(a)
     end
 
 
-    import math.sqrt
+    import math::sqrt
 
     proc myproc(a: float): float
         return a.sqrt(a)
