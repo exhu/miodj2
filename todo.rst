@@ -5,7 +5,8 @@
 - [ ] Constant declaration to ast
 - [ ] AstBuilder -- build ast from t1.miod
 - [ ] Semantic pass
+- [ ] Optimization pass (replace reference types with value types)
 - [ ] C backend
+- [ ] C interop (Primitive types with autoboxing)
 - [ ] migrate AST-related stuff from older projects
 - [x] write a simple test for grammar
-- [ ] optimize primitive types (autoboxing)

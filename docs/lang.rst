@@ -261,17 +261,16 @@ All values are of reference types:
         var _def: DefEntity, delegate(Entity)
     end_class
 
-    type IndexedCollection<T> = interface()
+    # created by [a, b, c] syntax
+    type Array<T> = interface(IndexedCollection)
         prop len: int, get
         proc at(index: int): T
     end_interface
 
-    type IndexedMutableCollection<T> = interface(IndexedCollection)
+    # created by [a, b, c] syntax, but requires explicit type of var as MutableArray
+    type MutableArray<T> = interface(Array)
         proc put_item_at(item: T, index: int): T
     end_interface
-
-    type Array<T> = class(IndexedMutableCollection)
-    end_class
 
     # enum declares a class, implements Hash, ToString, comparison operators,
     # declares global consts as instances of that class
@@ -288,11 +287,13 @@ All values are of reference types:
         proc concat(other: T): ConCat
     end_interface
 
+    # override ==
     type Equals<T> = interface()
         # must return false for NaN
         proc equals(other: T): bool
     end_interface
 
+    # override !=
     type NotEquals<T> = interface()
         # must return false for NaN
         proc not_equals(other: T): bool
@@ -301,6 +302,8 @@ All values are of reference types:
     type LessThan<T> = interface()
         proc less_than(other: T): bool
     end_interface
+
+    # TODO the same pattern for binary SHL, SHR, binary OR, AND, XOR, boolean AND, OR
 
     # each closure creates a hidden class with actual proc pointer and captured data
     type Closure = interface()
@@ -336,8 +339,22 @@ All values are of reference types:
         prop class: Class<T>, get
     end_interface
 
+    type PropertyMode = enum
+        ReadOnly,
+        WriteOnly,
+        ReadAndWrite
+    end_enum
+
+    type Property = class()
+        prop name: String, get
+        prop mode: PropertyMode, get
+        prop type_id: String, get
+    end_class
+
     type Class<T> = interface()
-        proc implements(i: Interface<T>)
+        proc implements(interface_id: String)
+        prop interfaces: Array<String>
+        prop properties: Array<Property>
         prop name: string
     end_interface
 
