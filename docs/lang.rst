@@ -123,7 +123,8 @@ guarded block with match-like constructs like in Rust/Scala:
 
     type Hash = interface() # aggregated interfaces in the braces
         proc hash(): i32
-        property stuff get, set
+        # read-write property:
+        property stuff:bool, set
     end_interface
 
     # implemented interfaces are listed in the braces
@@ -216,19 +217,20 @@ All values are of reference types:
     end_interface
 
     type Hash = interface()
-        prop hash: int, get
+        # read-only
+        prop hash: int
     end
 
     type Numeric = interface(Hash, Arithmetic)
         proc sqrt(): Numeric
         # zero constant
-        prop zero: Numeric, get
+        prop zero: Numeric
     end_interface
 
     # generic class
     type Point<T: Numeric> = class(Hash)
         # adds hidden fields automatically
-        prop x: T, get, set
+        prop x: T, set
 
         var _y: T
 
@@ -249,7 +251,7 @@ All values are of reference types:
     end
 
     type Entity = interface()
-        prop id: int, get
+        prop id: int
     end_interface
 
     type DefEntity = class(Entity)
@@ -341,14 +343,13 @@ All values are of reference types:
 
     type PropertyMode = enum
         ReadOnly,
-        WriteOnly,
         ReadAndWrite
     end_enum
 
     type Property = class()
-        prop name: String, get
-        prop mode: PropertyMode, get
-        prop type_id: String, get
+        prop name: String
+        prop mode: PropertyMode
+        prop type_id: String
     end_class
 
     type Class<T> = interface()
@@ -382,5 +383,43 @@ Packages usage
 
     proc myproc(a: float): float
         return a.sqrt(a.abs())
+    end
+
+
+Properties and fields
+---------------------
+
+Class fields are not accessible beyond the package they are declared in.
+Properties are public, accessible everywhere. Read-only properties are set
+during object creation:
+
+::
+
+    type MyClass = class()
+        # read-only, declares field 'name' to store value
+        prop name: String
+        # declares field 'f_email' to store value
+        prop email: String, set(set_email)
+    end_class
+
+    proc set_email(c: MyClass, email: String)
+        if valid_email(email) then
+            f_email = email
+        else
+            panic("invalid email!")
+        end_if
+    end
+
+    proc test1()
+        var a = MyClass(name: "ttt")
+        # the following will not compile:
+        a.name = "bbb"
+    end
+
+    proc test2()
+        # this won't trigger a panic, the field will contain invalid value
+        var a = MyClass(name: "invald email")
+        # but the following will stop the program:
+        a.email = "invalid again"
     end
 
