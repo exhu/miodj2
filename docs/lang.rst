@@ -201,6 +201,7 @@ All values are of reference types:
     - arithmetic(int, int64, float, double)
     - class instance (either concrete or interface)
         - enum constant instance
+        - string
 
 ::
 
@@ -209,7 +210,9 @@ All values are of reference types:
         proc minus(other: Arithmetic): Arithmetic
         proc mul(other: Arithmetic): Arithmetic
         proc div(other: Arithmetic): Arithmetic
-        proc rem(other: Arithmetic): Arithmetic
+        proc mod(other: Arithmetic): Arithmetic
+        # unary minus
+        proc neg(): Arithmetic
     end_interface
 
     type Hash = interface()
@@ -260,18 +263,87 @@ All values are of reference types:
 
     type IndexedCollection<T> = interface()
         prop len: int, get
-        proc item_at(index: int): T
+        proc at(index: int): T
     end_interface
 
     type IndexedMutableCollection<T> = interface(IndexedCollection)
-        proc set_item_at(item: T, index: int): T
+        proc put_item_at(item: T, index: int): T
     end_interface
 
     type Array<T> = class(IndexedMutableCollection)
     end_class
 
+    # enum declares a class, implements Hash, ToString, comparison operators,
+    # declares global consts as instances of that class
     type Day = enum
-        Working,
+        Working, # instance accessible as Day.Working
         Holiday
     end_enum
+
+    # overriding/implementing operators on types
+    # see Arithmetic interfaces above for declaring +,-,*,/,% operators
+
+    # concatenation operator '..' like in Lua
+    type ConCat<T> = interface()
+        proc concat(other: T): ConCat
+    end_interface
+
+    type Equals<T> = interface()
+        # must return false for NaN
+        proc equals(other: T): bool
+    end_interface
+
+    type NotEquals<T> = interface()
+        # must return false for NaN
+        proc not_equals(other: T): bool
+    end_interface
+
+    type LessThan<T> = interface()
+        proc less_than(other: T): bool
+    end_interface
+
+    # each closure creates a hidden class with actual proc pointer and captured data
+    type Closure = interface()
+    end_interface
+
+    # each proc pointer is a hidden struct with actual pointer
+    type ProcPtr = interface()
+    end_interface
+
+    # wrapped C pointer
+    type Ptr = interface()
+    end_interface
+
+    type CString = Ptr
+
+    alias int = i32
+    alias long = i64
+    alias float = f32
+    alias double = f64
+
+
+Packages usage
+--------------
+
+::
+
+    import math
+
+    proc myproc(a: float): float
+        return math.sqrt(a)
+    end
+
+
+    import math.sqrt
+
+    proc myproc(a: float): float
+        return a.sqrt(a)
+    end
+
+
+    import_all math
+
+    proc myproc(a: float): float
+        return a.sqrt(a.abs())
+    end
 
