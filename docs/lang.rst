@@ -366,6 +366,10 @@ Custom operator support is not confirmed.
 Packages usage
 --------------
 
+
+System types are declared in the 'builtin' package, which is imported
+implicitly.
+
 ::
 
     import math
@@ -519,4 +523,10 @@ String:
     "a unicode string"
 
 There's no "character" type.
+
+
+Variables and constants
+-----------------------
+
+Only constants can be global.
 
