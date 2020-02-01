@@ -75,9 +75,10 @@ OOP
 ---
 
 The language is inspired by Java, C++ practices in the projects I worked on
-(computer games).  Also some ideas from Nim, Go, Pascal, Lua, Rust, Scala.
+(computer games).  Also some ideas from Nim, Go, Pascal, Lua, Rust, Scala,
+Python.
 
-Like Java Miod has single entity description and data reference type -- a
+Like Java Miod has single entity description and data reference type -- an
 object/interface instance (which are almost the same). Unlike Java there's no
 garbage collection yet reference counting and manual weak references are used,
 so it's not that safe at all yet has predictable reproducible performance.
@@ -113,8 +114,8 @@ guarded block with match-like constructs like in Rust/Scala:
 
     # syntax sugar for switch on .class:
     proc dosmth(a: A)
-        match_class a.b.item
-        case MyObject as myobj
+        match a.b.item.class
+        case myobj: MyObject
             myobj.doSmth()
         case EmptyObject
             print("failed to retain all")
@@ -386,6 +387,43 @@ Packages usage
     end
 
 
+Modules
+-------
+
+Modules are namespaces.
+
+::
+
+    package mypkg
+
+    const a = 3
+
+    module read_consts
+
+    const b = 4
+
+    proc abc()
+    end
+
+    end_module
+
+
+    -------
+
+    import mypkg
+
+    mypkg::read_consts::abc()
+
+    import mypkg::read_consts
+
+    read_consts::abc()
+
+    import_all mypkg::read_consts
+
+    abc()
+
+
+
 Properties and fields
 ---------------------
 
@@ -398,8 +436,8 @@ during object creation:
     type MyClass = class()
         # read-only, declares field 'name' to store value
         prop name: String
-        # declares field 'f_email' to store value
-        prop email: String, set(set_email)
+        # declares field 'f_email' to store value, because of 'synth' modifier
+        prop email: String, set(set_email), synth
     end_class
 
     proc set_email(c: MyClass, email: String)
