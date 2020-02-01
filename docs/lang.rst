@@ -205,6 +205,8 @@ All values are of reference types:
         - enum constant instance
         - string
 
+Custom operator support is not confirmed.
+
 ::
 
     type Arithmetic = interface()
@@ -460,4 +462,61 @@ during object creation:
         # but the following will stop the program:
         a.email = "invalid again"
     end
+
+
+Type system
+-----------
+
+Everything is an object, has a pointer to a class.
+
+::
+
+    # @_root means not inherited from any interface,
+    # meant for build-in bare types only!
+
+    @_builtin
+    @_root
+    type Class = interface
+        prop name: String
+        proc implements(class_or_interface_name: String): bool
+        # TODO reflection API
+    end_interface
+
+    @_builtin
+    @_root
+    type WeakMon = interface
+        proc inc_ref()
+        proc dec_ref()
+        prop obj_ptr: CPtr, set
+    end_interface
+
+    @_builtin
+    @_root
+    type AnyType = interface
+        prop clazz: Class
+        proc __inc_ref()
+        proc __dec_ref()
+        # object, which stores a raw pointer to self to service weak references
+        proc __get_weak_mon(): WeakMon
+    end_interface
+
+
+'int' and 'float' types are special, they behave like instances, but can be
+optimized to be passed by value.
+
+
+Literals
+--------
+
+Integer values (without casting produces 32/64-bit type to fit the size):
+    decimal e.g. -123_456, 128
+    hex e.g. 0xFFFF_EEEE
+
+Floating point:
+    3.34e-7
+
+String:
+    "a unicode string"
+
+There's no "character" type.
 
