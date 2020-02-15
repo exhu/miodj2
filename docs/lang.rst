@@ -98,9 +98,9 @@ guarded block with match-like constructs like in Rust/Scala:
 
 ::
 
-    type A = class
+    class A
         var b: Optional<MyObject>
-    end_object
+    end_class
 
     proc dosmth(a: A)
         match a.b.item.class
@@ -122,14 +122,14 @@ guarded block with match-like constructs like in Rust/Scala:
         end_match
     end
 
-    type Hash = interface() # aggregated interfaces in the braces
+    interface Hash() # aggregated interfaces in the braces
         proc hash(): i32
         # read-write property:
         property stuff:bool, set
     end_interface
 
     # implemented interfaces are listed in the braces
-    type Myobject = class(Finalizable, Hash, Equals, ListenerHolder)
+    class Myobject(Finalizable, Hash, Equals, ListenerHolder)
         // const + @_no_heap makes it preallocated as part of object
         // if ref counter of such field in finalization
         @_no_heap
@@ -172,9 +172,9 @@ Simplified overload/override/method syntax
 
 ::
 
-    type A = object(Hashable)
-            var b: Optional<Object>
-    end_object
+    class A(Hashable)
+        var b: Optional<Object>
+    end_class
 
     # method implementation, compulsory for interface implementations.
     # allows access into fields for objects of type specified as the first argument.
@@ -209,7 +209,7 @@ Custom operator support is not confirmed.
 
 ::
 
-    type Arithmetic = interface()
+    interface Arithmetic
         proc plus(other: Arithmetic): Arithmetic
         proc minus(other: Arithmetic): Arithmetic
         proc mul(other: Arithmetic): Arithmetic
@@ -219,19 +219,20 @@ Custom operator support is not confirmed.
         proc neg(): Arithmetic
     end_interface
 
-    type Hash = interface()
+    interface Hash
         # read-only
         prop hash: int
-    end
+    end_interface
 
-    type Numeric = interface(Hash, Arithmetic)
+    interface Numeric(Hash, Arithmetic)
         proc sqrt(): Numeric
         # zero constant
         prop zero: Numeric
     end_interface
 
     # generic class
-    type Point<T: Numeric> = class(Hash)
+    public
+    class Point<T: Numeric>(Hash)
         # adds hidden fields automatically
         prop x: T, set
 
@@ -244,7 +245,6 @@ Custom operator support is not confirmed.
         prop hash: int, get(calc_hash), impl
     end_class
 
-    private
     proc calc_len<T:Numeric>(p: Point<T>): T
         return sqrt(p.x*p.x + p._y*p._y)
     end
@@ -253,33 +253,33 @@ Custom operator support is not confirmed.
         return p.x.hash + p.y.hash
     end
 
-    type Entity = interface()
+    interface Entity
         prop id: int
     end_interface
 
-    type DefEntity = class(Entity)
+    class DefEntity(Entity)
         var _id: int
         prop id: int, get(_id), impl
     end_class
 
-    type Person = class(Entity)
+    class Person(Entity)
         var _def: DefEntity, delegate(Entity)
     end_class
 
     # created by [a, b, c] syntax
-    type Array<T> = interface(IndexedCollection)
+    interface Array<T>(IndexedCollection)
         prop len: int, get
         proc at(index: int): T
     end_interface
 
     # created by [a, b, c] syntax, but requires explicit type of var as MutableArray
-    type MutableArray<T> = interface(Array)
+    interface MutableArray<T>(Array)
         proc put_item_at(item: T, index: int): T
     end_interface
 
     # enum declares a class, implements Hash, ToString, comparison operators,
     # declares global consts as instances of that class
-    type Day = enum
+    enum Day
         Working, # instance accessible as Day.Working
         Holiday
     end_enum
@@ -288,53 +288,55 @@ Custom operator support is not confirmed.
     # see Arithmetic interfaces above for declaring +,-,*,/,% operators
 
     # concatenation operator '..' like in Lua
-    type ConCat<T> = interface()
+    interface ConCat<T>
         proc concat(other: T): ConCat
     end_interface
 
     # override ==
-    type Equals<T> = interface()
+    interface Equals<T>
         # must return false for NaN
         proc equals(other: T): bool
     end_interface
 
     # override !=
-    type NotEquals<T> = interface()
+    interface NotEquals<T>()
         # must return false for NaN
         proc not_equals(other: T): bool
     end_interface
 
-    type LessThan<T> = interface()
+    interface LessThan<T>
         proc less_than(other: T): bool
     end_interface
 
     # TODO the same pattern for binary SHL, SHR, binary OR, AND, XOR, boolean AND, OR
 
     # each closure creates a hidden class with actual proc pointer and captured data
-    type Closure = interface()
+    interface Closure
     end_interface
 
     # each proc pointer is a hidden struct with actual pointer
-    type ProcPtr = interface()
+    interface ProcPtr
     end_interface
 
-    # wrapped C pointer
-    type Ptr = interface()
+    # wrapped C pointer, treated magically
+    interface CPtr
     end_interface
 
-    type CString = Ptr
+    # C string, treated magically
+    interface CString
+    end_interface
 
     alias int = i32
     alias long = i64
     alias float = f32
     alias double = f64
 
-    type WeakRef<T> = interface(Finalize)
+    interface WeakRef<T>(Finalize)
         proc lock(): Optional<T>
-    end_class
+    end_interface
 
     # base for all interfaces
-    type Interface<T> = interface()
+    interface Interface<T>()
         proc inc_ref()
         proc dec_ref()
         proc get_weak(): WeakRef<T>
@@ -344,18 +346,18 @@ Custom operator support is not confirmed.
         prop class: Class<T>, get
     end_interface
 
-    type PropertyMode = enum
+    enum PropertyMode
         ReadOnly,
         ReadAndWrite
     end_enum
 
-    type Property = class()
+    class Property
         prop name: String
         prop mode: PropertyMode
         prop type_id: String
     end_class
 
-    type Class<T> = interface()
+    interface Class<T>()
         proc implements(interface_id: String)
         prop interfaces: Array<String>
         prop properties: Array<Property>
@@ -439,7 +441,7 @@ during object creation:
 
 ::
 
-    type MyClass = class()
+    class MyClass()
         # read-only, declares field 'name' to store value
         prop name: String
         # declares field 'f_email' to store value, because of 'synth' modifier
@@ -480,7 +482,7 @@ Everything is an object, has a pointer to a class.
 
     @_builtin
     @_root
-    type Class = interface
+    interface Class
         prop name: String
         proc implements(class_or_interface_name: String): bool
         # TODO reflection API
@@ -488,7 +490,7 @@ Everything is an object, has a pointer to a class.
 
     @_builtin
     @_root
-    type WeakMon = interface
+    interface WeakMon
         proc inc_ref()
         proc dec_ref()
         prop obj_ptr: CPtr, set
@@ -496,7 +498,7 @@ Everything is an object, has a pointer to a class.
 
     @_builtin
     @_root
-    type AnyType = interface
+    interface AnyType
         prop clazz: Class
         proc __inc_ref()
         proc __dec_ref()
