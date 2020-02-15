@@ -205,7 +205,9 @@ All values are of reference types:
         - enum constant instance
         - string
 
-Custom operator support is not confirmed.
+Custom operator support is not confirmed yet.
+Mathematical operators are available for floats/ints, string concatenation is
+available via '..' operator.
 
 ::
 
@@ -406,12 +408,15 @@ Modules are namespaces.
 
     const a = 3
 
+    public
     module read_consts
 
-    const b = 4
+        public
+        const b = 4
 
-    proc abc()
-    end
+        public
+        proc abc()
+        end
 
     end_module
 
@@ -496,15 +501,23 @@ Everything is an object, has a pointer to a class.
         prop obj_ptr: CPtr, set
     end_interface
 
+
+    # root for all interfaces/classes/enums
     @_builtin
     @_root
     interface AnyType
-        prop clazz: Class
-        proc __inc_ref()
-        proc __dec_ref()
+        prop __clazz__: Class
+        proc __inc_ref__()
+        proc __dec_ref__()
         # object, which stores a raw pointer to self to service weak references
-        proc __get_weak_mon(): WeakMon
+        proc __get_weak_mon__(): WeakMon
     end_interface
+
+    @_builtin
+    # _native -- means implemented in C
+    @_native
+    class Int
+    end_class
 
 
 'int' and 'float' types are special, they behave like instances, but can be
