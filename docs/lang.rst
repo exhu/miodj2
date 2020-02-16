@@ -545,3 +545,25 @@ Variables and constants
 
 Only constants can be global.
 
+
+C backend
+---------
+
+Interface/class instance:
+::
+
+    typedef struct {
+        AnyType common;
+        void(*some_method)();
+    } Interface1;
+
+    typedef struct {
+        AnyType common;
+        # implemented interfaces
+        Interface1 i1;
+        Interface2 i2;
+        # only for class instance:
+        AnyTypeImpl anyTypeImpl;
+    } SomeInstance;
+
+See details in "miod_builtins.h"
