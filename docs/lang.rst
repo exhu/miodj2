@@ -567,3 +567,40 @@ Interface/class instance:
     } SomeInstance;
 
 See details in "miod_builtins.h"
+
+
+
+Interfaceless variant
+---------------------
+
+No interfaces, true classes with inheritance, abstract classes, closures
+are replaced with anonymous classes.
+
+::
+
+    abstract class BaseHandler
+        abstract method on_new_data(data: Object)
+        end
+    end_class
+
+
+    class MyHandler(BaseHandler)
+        override method on_new_data(data: Object)
+            data.received = true
+        end
+    end_class
+
+    proc myproc()
+        var i = 3
+        let a = class(BaseHandler)
+            var captured: Int
+            override method on_new_data(data: Object)
+                data.received = true
+            end
+        end_class { captured: i }
+    end
+
+
+Methods are virtual, all methods and properties are public, class fields are
+accessible only from the package they are defined in.
+
