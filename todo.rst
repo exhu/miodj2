@@ -1,3 +1,4 @@
+- [ ] Implement interfaces and RTTI in C
 - [x] Comments to ast
 - [x] Docs to ast
 - [ ] Simplify lang. for only reference types, int, long, float, double, enum,

@@ -570,8 +570,8 @@ See details in "miod_builtins.h"
 
 
 
-Interfaceless variant
----------------------
+Interfaceless variant (DISCARDED!)
+----------------------------------
 
 No interfaces, true classes with inheritance, abstract classes, closures
 are replaced with anonymous classes.
