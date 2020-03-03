@@ -14,14 +14,14 @@ Features
 - global consts
 - global procs
 - procs pointers
-- closures
-- lambdas
+- closures (probably via anonymous classes like in java)
 - automatically reference counted objects (like in ObjC) with composition and
     interfaces (like in Golang but interfaces are implemented explicitly)
-- no inheritance
+- no inheritance, automatic delegation
 - everything is a reference type (some magic optimizations for basic types),
     an instance implementing basic interfaces.
-- operator overloading via interfaces (like Lua's metatables)
+- operator overloading via interfaces (like Lua's metatables), or via special
+    methods like in Python
 - generic pointer type to interop with C (nothing can be done with pointer
     except to pass between C and Miod)
 - no null pointers
