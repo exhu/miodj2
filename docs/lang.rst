@@ -123,7 +123,7 @@ guarded block with match-like constructs like in Rust/Scala:
     end
 
     interface Hash() # aggregated interfaces in the braces
-        proc hash(): i32
+        method hash(): i32
         # read-write property:
         property stuff:bool, set
     end_interface
@@ -603,4 +603,27 @@ are replaced with anonymous classes.
 
 Methods are virtual, all methods and properties are public, class fields are
 accessible only from the package they are defined in.
+
+
+Closure
+-------
+
+::
+
+    interface MyClosure
+        proc do_smth(a, b: Int): Int
+    end_interface
+
+    proc call()
+        var a = 1
+        var b = "aaa"
+        let c = class(MyClosure)
+            var cap_a = a
+            var cap_b = b
+            proc do_smth(a, b: Int): Int
+                return a*b + a + b.len()
+            end
+        end_class()
+    end
+
 
