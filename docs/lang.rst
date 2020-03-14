@@ -647,44 +647,47 @@ Optional instead of null
 
 ::
 
+    # generic parameter is used only for clarity
     public
-    interface Optional<O>
-        prop has_value: bool, get
-        prop value: O, get
+    interface Optional$<O>
+        prop has_value: Bool, get
     end_interface
 
     public
-    class OptionalWithValue<O>(Optional<O>)
-        impl prop value: O, get
+    class OptionalWithValue$<O>(Optional$<O>)
+        prop value: O, get
         @_nofield
-        impl prop has_value: bool, get = get_value
-        proc get_value(): bool
+        impl prop has_value: Bool, get = get_has_value
+        proc get_has_value(): Bool
             return true
         end
     end_class
 
     public
-    class OptionalEmpty<O>(Optional<O>)
+    class OptionalEmpty$<O>(Optional$<O>, Equals)
         @_nofield
-        impl prop has_value: bool, get = get_has_value
-        proc get_has_value(): bool
-            return false
-        end
-
-        @_nofield
-        impl prop value: bool, get = get_value
-        proc get_value(): bool
-            panic("OptionalEmpty value read.")
+        impl prop has_value: Bool, get = get_has_value
+        proc get_has_value(): Bool
             return false
         end
     end_class
 
-    proc test(obj: Optional<Int>)
+    proc test(obj: Optional$<Int>)
+        switch_cast(obj)
 
-        if obj.has_value then
-            let i = obj.value
-        end_if
+        case OptionalWithValue$<Int>
+            println("value = {0}", [obj.value])
+        end_case
 
+        case OptionalEmpty$<Int>
+            println("No value")
+        end_case
+
+        else
+            println("Invalid type")
+        end_case
+
+        end_switch
     end
 
 
@@ -694,3 +697,11 @@ cannot be assigned later. A getter proc can ignore stored value completely.
 initialization completely.
 
 Properties are always public.
+
+
+Generics
+~~~~~~~~
+
+The code is not generated, but new types are registered with generic arguments
+stored in the meta data, so that you cannot cast OptionalEmpty!<Int> to
+OptionalEmpty!<Long>.
