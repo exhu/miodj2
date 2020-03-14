@@ -640,3 +640,41 @@ if all fields are initialized and trigger error otherwise. This is necessary
 for serializable classes. This attribute can be set on an interfaces to make
 implemeting classes obey the rule.
 
+
+
+Optional instead of null
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    public
+    interface Optional
+        prop has_value: bool, get
+    end_interface
+
+    public
+    class OptionalWithValue<O>(Optional)
+        prop value: O, get
+        @_nofield
+        impl prop has_value: bool, get = get_value
+        proc get_value(): bool
+            return true
+        end
+    end_class
+
+    public
+    class OptionalEmpty<O>(Optional)
+        @_nofield
+        impl prop has_value: bool = false, get = get_value
+        proc get_value(): bool
+            return false
+        end
+    end_class
+
+
+Read-only properties are marked with 'get' only. They can be initialized but
+cannot be assigned later. A getter proc can ignore stored value completely.
+@_nofield anotation disables generation of field value and disables property
+initialization completely.
+
+Properties are always public.
