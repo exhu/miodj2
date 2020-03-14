@@ -9,9 +9,15 @@ typedef struct {
     size_t base_offset;
 } miod_InterfDesc;
 
+
+typedef void (*miod_defaults_proc)(void *inst);
+
 typedef struct {
     const char *name;
     miod_InterfDesc **interfaces;
+
+    // defaults constructor, can be null
+    miod_defaults_proc defaults_proc;
 } miod_Class;
 
 typedef struct {

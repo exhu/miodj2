@@ -608,22 +608,35 @@ accessible only from the package they are defined in.
 Closure
 -------
 
+Closures are class instances in order to manage weak references for captured
+vars explicitly.
+
 ::
 
+    public
     interface MyClosure
-        proc do_smth(a, b: Int): Int
+      proc do_smth(a, b: Int): Int
     end_interface
 
+    public
     proc call()
-        var a = 1
-        var b = "aaa"
-        let c = class(MyClosure)
-            var cap_a = a
-            var cap_b = b
-            proc do_smth(a, b: Int): Int
-                return a*b + a + b.len()
-            end
-        end_class()
+      var a = 1
+      var b = "aaa"
+      let c = class(MyClosure)
+        var cap_a: Int = 0
+        var cap_b: String = ""
+        method do_smth(a, b: Int): Int
+          return a*b + a + b.len() + this.cap_a
+        end
+      end_class(cap_b = b, cap_a = a)
     end
 
+
+All classes must have default values set for the fields, if there are none,
+the class cannot be instantiated without passing initial field values.
+
+@_defaults attribute can be set on class declaration to make compiler check
+if all fields are initialized and trigger error otherwise. This is necessary
+for serializable classes. This attribute can be set on an interfaces to make
+implemeting classes obey the rule.
 
