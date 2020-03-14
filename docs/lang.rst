@@ -648,13 +648,14 @@ Optional instead of null
 ::
 
     public
-    interface Optional
+    interface Optional<O>
         prop has_value: bool, get
+        prop value: O, get
     end_interface
 
     public
-    class OptionalWithValue<O>(Optional)
-        prop value: O, get
+    class OptionalWithValue<O>(Optional<O>)
+        impl prop value: O, get
         @_nofield
         impl prop has_value: bool, get = get_value
         proc get_value(): bool
@@ -663,13 +664,28 @@ Optional instead of null
     end_class
 
     public
-    class OptionalEmpty<O>(Optional)
+    class OptionalEmpty<O>(Optional<O>)
         @_nofield
-        impl prop has_value: bool = false, get = get_value
+        impl prop has_value: bool, get = get_has_value
+        proc get_has_value(): bool
+            return false
+        end
+
+        @_nofield
+        impl prop value: bool, get = get_value
         proc get_value(): bool
+            panic("OptionalEmpty value read.")
             return false
         end
     end_class
+
+    proc test(obj: Optional<Int>)
+
+        if obj.has_value then
+            let i = obj.value
+        end_if
+
+    end
 
 
 Read-only properties are marked with 'get' only. They can be initialized but
