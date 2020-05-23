@@ -5,8 +5,9 @@
 
 
 typedef struct {
-    const char *name;
-    size_t base_offset;
+    const char *name; // name with generic params
+    ptrdiff_t base_offset;
+    // TODO generic param types
 } miod_InterfDesc;
 
 
@@ -36,7 +37,8 @@ typedef struct {
 } miod_BaseIntefaceInstance;
 
 
-// returns NULL or interface desc.
+// returns NULL or interface desc.,
+// TODO to support generics one must provide types, not just the name
 miod_InterfDesc* miod_class_implements(miod_BaseClassInstance *inst,
     const char *name);
 
