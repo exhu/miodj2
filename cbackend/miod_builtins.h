@@ -19,21 +19,24 @@ typedef struct {
 
     // defaults constructor, can be null
     miod_defaults_proc defaults_proc;
+    void(*destroy_func)();
 } miod_Class;
 
 typedef struct {
     int32_t ref_counter;
     miod_Class *clazz;
-    void(*destroy_func)();
 } miod_AnyTypeImpl;
 
 typedef struct {
     miod_AnyTypeImpl any_impl;
-    void *other[0];
+    void *other[0]; // class fields, interface function pointers
+    // miod_BaseInterfaceInstance iface1;
+    // miod_BaseInterfaceInstance iface2;
 } miod_BaseClassInstance;
 
 typedef struct {
     miod_BaseClassInstance *base_instance;
+    void *vtbl;
 } miod_BaseIntefaceInstance;
 
 
