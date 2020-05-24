@@ -3,7 +3,7 @@
 #include <string.h>
 
 
-miod_InterfDesc* miod_class_implements(miod_BaseClassInstance *inst,
+miod_InterfDesc* miod_interface_desc_from_class(miod_BaseClassInstance *inst,
     const char *name) {
 
     miod_InterfDesc **cur_interf = inst->any_impl.clazz->interfaces;
@@ -22,8 +22,14 @@ miod_InterfDesc* miod_class_implements(miod_BaseClassInstance *inst,
 }
 
 
-miod_BaseIntefaceInstance* miod_cast_to(miod_BaseClassInstance *inst,
+miod_BaseIntefaceInstance* miod_interface_from_class(miod_BaseClassInstance *inst,
     miod_InterfDesc *interf) {
 
-    // TODO
+    if (inst == NULL || interf == NULL) {
+        return NULL;
+    }
+
+    ptrdiff_t pinst = (ptrdiff_t)inst;
+    miod_BaseIntefaceInstance *iinst = (miod_BaseIntefaceInstance*)(pinst + interf->vtbl->base_offset);
+    return iinst;
 }

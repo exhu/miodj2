@@ -10,7 +10,7 @@ static void test_no_interfaces() {
     miod_BaseClassInstance inst;
     inst.any_impl.clazz = &clazz;
 
-    miod_InterfDesc* interf = miod_class_implements(&inst, "MyInterf");
+    miod_InterfDesc *interf = miod_interface_desc_from_class(&inst, "MyInterf");
     assert(interf == NULL);
 }
 
@@ -23,24 +23,33 @@ static void test_no_suitable_interface() {
     miod_BaseClassInstance inst;
     inst.any_impl.clazz = &clazz;
 
-    miod_InterfDesc* interf = miod_class_implements(&inst, "MyInterf");
+    miod_InterfDesc* interf = miod_interface_desc_from_class(&inst, "MyInterf");
     assert(interf == NULL);
 }
+
+typedef struct {
+    miod_BaseClassInstance base;
+    miod_BaseIntefaceInstance iface1;
+} MyClassInst;
 
 static void test_interface_found() {
     miod_Class clazz;
     clazz.name = "MyClass";
-    miod_InterfDesc desc = {"MyInterf", offsetof(miod_BaseClassInstance, other)};
+
+    miod_BaseVtbl vtbl = {offsetof(MyClassInst, iface1)};
+
+    miod_InterfDesc desc = {"MyInterf", &vtbl};
     miod_InterfDesc *descs[] = {&desc, NULL};
     clazz.interfaces = descs;
 
-    miod_BaseClassInstance inst;
-    inst.any_impl.clazz = &clazz;
+    MyClassInst inst;
+    inst.base.any_impl.clazz = &clazz;
 
-    miod_InterfDesc* interf = miod_class_implements(&inst, "MyInterf");
+    miod_InterfDesc* interf = miod_interface_desc_from_class(&inst.base, "MyInterf");
     assert(interf == &desc);
 }
 
+// TODO test miod_interface_from_class
 
 int main() {
     test_no_interfaces();

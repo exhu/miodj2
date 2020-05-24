@@ -3,19 +3,23 @@
 #include <stdint.h>
 #include <stddef.h>
 
+typedef struct {
+    // offset from the class instance pointer
+    ptrdiff_t base_offset;
+} miod_BaseVtbl;
 
+// interface table for an interface per each class that implements it
 typedef struct {
     const char *name; // name with generic params
-    ptrdiff_t base_offset;
     // TODO generic param types
+    miod_BaseVtbl *vtbl;
 } miod_InterfDesc;
 
-struct _miod_BaseIntefaceInstance;
+struct _miod_BaseClassInstance;
 
 // TODO optimize for primitive types
-// TODO to class instance pointer
-typedef struct _miod_BaseIntefaceInstance *(*miod_getter)(void);
-typedef void (*miod_setter)(struct _miod_BaseIntefaceInstance *);
+typedef struct _miod_BaseClassInstance *(*miod_getter)(void);
+typedef void (*miod_setter)(struct _miod_BaseClassInstance *);
 
 typedef struct {
     const char *name;
@@ -24,8 +28,8 @@ typedef struct {
     miod_setter *setter;
 } miod_Property;
 
-typedef void (*miod_init_proc)(void *inst);
-typedef void (*miod_destroy_proc)(void *inst);
+typedef void (*miod_init_proc)(struct _miod_BaseClassInstance *inst);
+typedef void (*miod_destroy_proc)(struct _miod_BaseClassInstance *inst);
 
 typedef struct {
     const char *name;
@@ -40,12 +44,13 @@ typedef struct {
 
 typedef struct {
     int32_t ref_counter;
+    int32_t weak_counter;
     miod_Class *clazz;
 } miod_AnyTypeImpl;
 
-typedef struct {
+typedef struct _miod_BaseClassInstance {
     miod_AnyTypeImpl any_impl;
-    void *other[0]; // class fields, interface function pointers
+    // class fields, interface function pointers
     // miod_BaseInterfaceInstance iface1;
     // miod_BaseInterfaceInstance iface2;
 } miod_BaseClassInstance;
@@ -53,20 +58,22 @@ typedef struct {
 typedef struct _miod_BaseIntefaceInstance {
     // we always know the type in the source file, so no need to store instance ptr
     // miod_BaseClassInstance *base_instance;
-    void *vtbl;
+    miod_BaseVtbl *vtbl;
 } miod_BaseIntefaceInstance;
 
 // PropertyChangeNotifier interface vtbl
+// If a class implements this interfaces, then each call to set property will trigger
+// this method.
 typedef struct {
-    // offset from the class instance pointer
-    ptrdiff_t base_offset;
+    miod_BaseVtbl baseVtbl;
     void (*on_property_updated)(void *this, const char *name);
 } miod_PropertyChangeNotifier;
 
 // returns NULL or interface desc.,
 // TODO to support generics one must provide types, not just the name
-miod_InterfDesc* miod_class_implements(miod_BaseClassInstance *inst,
+miod_InterfDesc* miod_interface_desc_from_class(miod_BaseClassInstance *inst,
     const char *name);
 
-miod_BaseIntefaceInstance* miod_cast_to(miod_BaseClassInstance *inst,
+// NULL if any argument is null
+miod_BaseIntefaceInstance* miod_interface_from_class(miod_BaseClassInstance *inst,
     miod_InterfDesc *interf);
