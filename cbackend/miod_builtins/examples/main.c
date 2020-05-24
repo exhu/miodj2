@@ -2,5 +2,5 @@
 
 int main(int argc, char const *argv[])
 {
-    return miod_builtins(argc, argv);
+    return 0; //miod_builtins(argc, argv);
 }

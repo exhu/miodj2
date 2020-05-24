@@ -10,11 +10,11 @@ typedef struct {
     // TODO generic param types
 } miod_InterfDesc;
 
-typedef struct miod_BaseIntefaceInstance;
+struct _miod_BaseIntefaceInstance;
 
 // TODO optimize for primitive types
-typedef miod_BaseIntefaceInstance *(*miod_getter)(void);
-typedef void (*miod_setter)(miod_BaseIntefaceInstance *);
+typedef struct _miod_BaseIntefaceInstance *(*miod_getter)(void);
+typedef void (*miod_setter)(struct _miod_BaseIntefaceInstance *);
 
 typedef struct {
     const char *name;
@@ -49,7 +49,7 @@ typedef struct {
     // miod_BaseInterfaceInstance iface2;
 } miod_BaseClassInstance;
 
-typedef struct {
+typedef struct _miod_BaseIntefaceInstance {
     miod_BaseClassInstance *base_instance;
     void *vtbl;
 } miod_BaseIntefaceInstance;
