@@ -10,16 +10,31 @@ typedef struct {
     // TODO generic param types
 } miod_InterfDesc;
 
+typedef struct miod_BaseIntefaceInstance;
 
-typedef void (*miod_defaults_proc)(void *inst);
+// TODO optimize for primitive types
+typedef miod_BaseIntefaceInstance *(*miod_getter)(void);
+typedef void (*miod_setter)(miod_BaseIntefaceInstance *);
 
 typedef struct {
     const char *name;
-    miod_InterfDesc **interfaces;
+    miod_getter getter;
+    // can be NULL
+    miod_setter *setter;
+} miod_Property;
 
-    // defaults constructor, can be null
-    miod_defaults_proc defaults_proc;
-    void(*destroy_func)();
+typedef void (*miod_init_proc)(void *inst);
+typedef void (*miod_destroy_proc)(void *inst);
+
+typedef struct {
+    const char *name;
+    // NULL terminated
+    miod_InterfDesc **interfaces;
+    miod_Property **properties;
+    // default constructor, can be null
+    miod_init_proc init_proc;
+    // destructor
+    miod_destroy_proc destroy_proc;
 } miod_Class;
 
 typedef struct {

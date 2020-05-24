@@ -1,0 +1,4 @@
+add_executable(miod_builtins_app main.c)
+set_target_properties(miod_builtins_app PROPERTIES OUTPUT_NAME miod_builtins)
+target_link_libraries(miod_builtins_app miod_builtins_lib)
+target_compile_features(miod_builtins_app PUBLIC c_std_99)
