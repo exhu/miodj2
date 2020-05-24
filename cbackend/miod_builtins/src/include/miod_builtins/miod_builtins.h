@@ -40,6 +40,7 @@ typedef struct {
     miod_init_proc init_proc;
     // destructor
     miod_destroy_proc destroy_proc;
+    size_t struct_size;
 } miod_Class;
 
 typedef struct {
@@ -55,11 +56,11 @@ typedef struct _miod_BaseClassInstance {
     // miod_BaseInterfaceInstance iface2;
 } miod_BaseClassInstance;
 
-typedef struct _miod_BaseIntefaceInstance {
+typedef struct _miod_BaseInterfaceInstance {
     // we always know the type in the source file, so no need to store instance ptr
     // miod_BaseClassInstance *base_instance;
     miod_BaseVtbl *vtbl;
-} miod_BaseIntefaceInstance;
+} miod_BaseInterfaceInstance;
 
 // PropertyChangeNotifier interface vtbl
 // If a class implements this interfaces, then each call to set property will trigger
@@ -69,11 +70,20 @@ typedef struct {
     void (*on_property_updated)(void *this, const char *name);
 } miod_PropertyChangeNotifier;
 
+miod_BaseClassInstance *miod_new_instance(miod_Class *clazz);
+
+miod_BaseClassInstance *miod_class_instance_from_interface(miod_BaseInterfaceInstance *iinst);
+
+void miod_inst_inc_ref(miod_BaseClassInstance *inst);
+void miod_inst_dec_ref(miod_BaseClassInstance *inst);
+void miod_interface_inst_inc_ref(miod_BaseInterfaceInstance *iinst);
+void miod_interface_inst_dec_ref(miod_BaseInterfaceInstance *iinst);
+
 // returns NULL or interface desc.,
 // TODO to support generics one must provide types, not just the name
 miod_InterfDesc* miod_interface_desc_from_class(miod_BaseClassInstance *inst,
     const char *name);
 
 // NULL if any argument is null
-miod_BaseIntefaceInstance* miod_interface_from_class(miod_BaseClassInstance *inst,
+miod_BaseInterfaceInstance* miod_interface_from_class(miod_BaseClassInstance *inst,
     miod_InterfDesc *interf);
