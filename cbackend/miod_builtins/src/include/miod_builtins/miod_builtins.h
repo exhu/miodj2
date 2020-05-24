@@ -13,6 +13,7 @@ typedef struct {
 struct _miod_BaseIntefaceInstance;
 
 // TODO optimize for primitive types
+// TODO to class instance pointer
 typedef struct _miod_BaseIntefaceInstance *(*miod_getter)(void);
 typedef void (*miod_setter)(struct _miod_BaseIntefaceInstance *);
 
@@ -50,10 +51,17 @@ typedef struct {
 } miod_BaseClassInstance;
 
 typedef struct _miod_BaseIntefaceInstance {
-    miod_BaseClassInstance *base_instance;
+    // we always know the type in the source file, so no need to store instance ptr
+    // miod_BaseClassInstance *base_instance;
     void *vtbl;
 } miod_BaseIntefaceInstance;
 
+// PropertyChangeNotifier interface vtbl
+typedef struct {
+    // offset from the class instance pointer
+    ptrdiff_t base_offset;
+    void (*on_property_updated)(void *this, const char *name);
+} miod_PropertyChangeNotifier;
 
 // returns NULL or interface desc.,
 // TODO to support generics one must provide types, not just the name
