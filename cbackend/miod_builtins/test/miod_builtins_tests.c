@@ -57,20 +57,22 @@ static void test_new_instance() {
     clazz.destroy_proc = NULL;
     clazz.properties = NULL;
 
-    miod_BaseVtbl vtbl = {offsetof(MyClassInst, iface1)};
-    miod_InterfDesc desc = {"MyInterf", &vtbl};
-    miod_InterfDesc *descs[] = {&desc, NULL};
+    miod_BaseVtbl iface1_vtbl = {offsetof(MyClassInst, iface1)};
+    miod_InterfDesc iface1_desc = {"MyInterf", &iface1_vtbl};
+    miod_InterfDesc *descs[] = {&iface1_desc, NULL};
     clazz.interfaces = descs;
 
     MyClassInst *inst = (MyClassInst*)miod_new_instance(&clazz);
-    // TODO check proper initialization, vtbl
+
+    // check proper tbl initialization
+    assert(inst->iface1.vtbl == &iface1_vtbl);
+
+    // TODO check proper constructor initialization
 
     miod_inst_dec_ref(&inst->base);
 }
 
 /* TODO test miod_interface_from_class
-
-miod_BaseClassInstance *miod_new_instance(miod_Class *clazz);
 
 miod_BaseClassInstance *miod_class_instance_from_interface(miod_BaseInterfaceInstance *iinst);
 

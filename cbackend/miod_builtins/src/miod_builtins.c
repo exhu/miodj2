@@ -11,7 +11,18 @@ miod_BaseClassInstance *miod_new_instance(miod_Class *clazz) {
     memset(inst, 0, sz);
     inst->any_impl.ref_counter = 1;
     inst->any_impl.clazz = clazz;
-    // TODO initialize vtbls
+
+    // initialize instance vtbls to interfaces
+    miod_InterfDesc **idesc = clazz->interfaces;
+    while(*idesc != NULL) {
+        miod_BaseVtbl *vtable = (*idesc)->vtbl;
+        ptrdiff_t inst_ptr = (ptrdiff_t)inst;
+        ptrdiff_t ivtbl_ptr = inst_ptr + vtable->base_offset;
+        miod_BaseInterfaceInstance *i_inst = (miod_BaseInterfaceInstance*)ivtbl_ptr;
+        i_inst->vtbl = vtable;
+        ++idesc;
+    }
+
     if (clazz->init_proc != NULL) {
         clazz->init_proc(inst);
     }
