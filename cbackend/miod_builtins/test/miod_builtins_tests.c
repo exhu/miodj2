@@ -68,13 +68,16 @@ static void test_new_instance() {
     clazz.interfaces = descs;
 
     MyClassInst *inst = (MyClassInst*)miod_new_instance(&clazz);
+    assert(inst != NULL);
 
     // check proper tbl initialization
     assert(inst->iface1.vtbl == &iface1_vtbl);
+    assert(inst->base.any_impl.ref_counter == 1);
 
     // TODO check proper constructor initialization
 
     miod_inst_dec_ref((miod_BaseClassInstance**)&inst);
+    assert(inst == NULL);
 }
 
 /* TODO test miod_interface_from_class
