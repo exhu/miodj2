@@ -27,12 +27,12 @@ static void test_no_suitable_interface() {
     assert(interf == NULL);
 }
 
-typedef struct {
-    miod_BaseClassInstance base;
-    miod_BaseInterfaceInstance iface1;
-} MyClassInst;
-
 static void test_interface_found() {
+    typedef struct {
+        miod_BaseClassInstance base;
+        miod_BaseInterfaceInstance iface1;
+    } MyClassInst;
+
     miod_Class clazz;
     clazz.name = "MyClass";
 
@@ -50,6 +50,11 @@ static void test_interface_found() {
 }
 
 static void test_new_instance() {
+    typedef struct {
+        miod_BaseClassInstance base;
+        miod_BaseInterfaceInstance iface1;
+    } MyClassInst;
+
     miod_Class clazz;
     clazz.name = "MyClass";
     clazz.struct_size = sizeof(MyClassInst);
@@ -69,7 +74,7 @@ static void test_new_instance() {
 
     // TODO check proper constructor initialization
 
-    miod_inst_dec_ref(&inst->base);
+    miod_inst_dec_ref((miod_BaseClassInstance**)&inst);
 }
 
 /* TODO test miod_interface_from_class

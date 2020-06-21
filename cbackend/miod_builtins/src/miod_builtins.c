@@ -38,7 +38,8 @@ void miod_inst_inc_ref(miod_BaseClassInstance *inst) {
     inst->any_impl.ref_counter++;
 }
 
-void miod_inst_dec_ref(miod_BaseClassInstance *inst) {
+void miod_inst_dec_ref(miod_BaseClassInstance **pinst) {
+    miod_BaseClassInstance *inst = *pinst;
     int32_t counter = inst->any_impl.ref_counter;
     counter--;
     inst->any_impl.ref_counter = counter;
@@ -49,6 +50,7 @@ void miod_inst_dec_ref(miod_BaseClassInstance *inst) {
             destroy_proc(inst);
         }
         free(inst);
+        *pinst = NULL;
     }
 }
 
@@ -57,9 +59,13 @@ void miod_interface_inst_inc_ref(miod_BaseInterfaceInstance *iinst) {
     miod_inst_inc_ref(inst);
 }
 
-void miod_interface_inst_dec_ref(miod_BaseInterfaceInstance *iinst) {
-    miod_BaseClassInstance *inst = miod_class_instance_from_interface(iinst);
-    miod_inst_dec_ref(inst);
+void miod_interface_inst_dec_ref(miod_BaseInterfaceInstance **piinst) {
+    miod_BaseClassInstance *inst = miod_class_instance_from_interface(*piinst);
+    miod_inst_dec_ref(&inst);
+    if (inst == NULL)
+    {
+        *piinst = NULL;
+    }
 }
 
 miod_InterfDesc* miod_interface_desc_from_class(miod_BaseClassInstance *inst,

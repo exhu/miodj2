@@ -75,9 +75,9 @@ miod_BaseClassInstance *miod_new_instance(miod_Class *clazz);
 miod_BaseClassInstance *miod_class_instance_from_interface(miod_BaseInterfaceInstance *iinst);
 
 void miod_inst_inc_ref(miod_BaseClassInstance *inst);
-void miod_inst_dec_ref(miod_BaseClassInstance *inst);
+void miod_inst_dec_ref(miod_BaseClassInstance **pinst);
 void miod_interface_inst_inc_ref(miod_BaseInterfaceInstance *iinst);
-void miod_interface_inst_dec_ref(miod_BaseInterfaceInstance *iinst);
+void miod_interface_inst_dec_ref(miod_BaseInterfaceInstance **piinst);
 
 // returns NULL or interface desc.,
 // TODO to support generics one must provide types, not just the name
