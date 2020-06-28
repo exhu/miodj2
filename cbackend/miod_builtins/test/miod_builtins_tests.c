@@ -93,7 +93,6 @@ static void myclass_destroy_proc(struct _miod_BaseClassInstance *inst) {
 }
 
 static void test_new_instance_constructor_and_destructor() {
-
     miod_Class clazz;
     clazz.name = "MyClass";
     clazz.struct_size = sizeof(MyClassWithFieldInst);
@@ -120,7 +119,27 @@ static void test_new_instance_constructor_and_destructor() {
     assert(test_value == 98765432);
 }
 
-/* TODO test miod_interface_from_class
+static void test_miod_interface_from_class() {
+    miod_Class clazz;
+    clazz.name = "MyClass";
+    clazz.struct_size = sizeof(MyClassWithFieldInst);
+    clazz.init_proc = myclass_init_proc;
+    clazz.destroy_proc = myclass_destroy_proc;
+    clazz.properties = NULL;
+
+    miod_BaseVtbl iface1_vtbl = {offsetof(MyClassWithFieldInst, iface1)};
+    miod_InterfDesc iface1_desc = {"MyInterf", &iface1_vtbl};
+    miod_InterfDesc *descs[] = {&iface1_desc, NULL};
+    clazz.interfaces = descs;
+
+    MyClassWithFieldInst *inst = (MyClassWithFieldInst*)miod_new_instance(&clazz);
+    assert(inst != NULL);
+    miod_BaseInterfaceInstance *int_inst = miod_interface_from_class(
+        (miod_BaseClassInstance*)inst, &iface1_desc);
+    assert(int_inst != NULL);
+    assert(int_inst == &(inst->iface1));
+}
+/* TODO 
 
 miod_BaseClassInstance *miod_class_instance_from_interface(miod_BaseInterfaceInstance *iinst);
 
@@ -135,5 +154,6 @@ int main() {
     test_no_suitable_interface();
     test_interface_found();
     test_new_instance();
+    test_miod_interface_from_class();
     return 0;
 }
