@@ -705,3 +705,10 @@ Generics
 The code is not generated, but new types are registered with generic arguments
 stored in the meta data, so that you cannot cast OptionalEmpty!<Int> to
 OptionalEmpty!<Long>.
+
+Compilation
+-----------
+
+All files at the same directory level produce a unit. The compiler accepts the
+list of source files for all the units used by the program. It searches for
+imports only in this list.
