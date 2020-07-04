@@ -712,3 +712,7 @@ Compilation
 All files at the same directory level produce a unit. The compiler accepts the
 list of source files for all the units used by the program. It searches for
 imports only in this list.
+
+The compiler can accept unit names aliases to allow using platform specific
+implementation for a common unit, e.g. "os_linux", "os_win" for an import unit
+name "os".
