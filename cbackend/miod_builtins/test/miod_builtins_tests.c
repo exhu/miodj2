@@ -166,16 +166,20 @@ static void test_inst_inc_dec_ref() {
     clazz.struct_size = sizeof(MyClassWithFieldInst);
     MyClassWithFieldInst *inst = (MyClassWithFieldInst*)miod_new_instance(&clazz);
     assert(inst != NULL);
+    assert(clazz.instance_count == 1);
 
     miod_inst_inc_ref((miod_BaseClassInstance*)inst);
 
     assert(inst->base.any_impl.ref_counter == 2);
+    assert(clazz.instance_count == 1);
 
     miod_inst_dec_ref((miod_BaseClassInstance**)&inst);
     assert(inst != NULL);
     assert(inst->base.any_impl.ref_counter == 1);
+    assert(inst->base.any_impl.clazz->instance_count == 1);
     miod_inst_dec_ref((miod_BaseClassInstance**)&inst);
     assert(inst == NULL);
+    assert(clazz.instance_count == 0);
 }
 
 static void test_interface_inc_dec_ref() {
@@ -191,6 +195,7 @@ static void test_interface_inc_dec_ref() {
 
     MyClassWithFieldInst *inst = (MyClassWithFieldInst*)miod_new_instance(&clazz);
     assert(inst != NULL);
+    assert(clazz.instance_count == 1);
     miod_BaseInterfaceInstance *iface_inst = &(inst->iface1);
     miod_interface_inst_inc_ref(iface_inst);
     assert(inst->base.any_impl.ref_counter == 2);
@@ -199,6 +204,7 @@ static void test_interface_inc_dec_ref() {
     assert(inst->base.any_impl.ref_counter == 1);
     miod_interface_inst_dec_ref(&iface_inst);
     assert(iface_inst == NULL);
+    assert(clazz.instance_count == 0);
 }
 
 

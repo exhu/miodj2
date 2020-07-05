@@ -11,6 +11,7 @@ miod_BaseClassInstance *miod_new_instance(miod_Class *clazz) {
     memset(inst, 0, sz);
     inst->any_impl.ref_counter = 1;
     inst->any_impl.clazz = clazz;
+    clazz->instance_count++;
 
     // initialize instance vtbls to interfaces
     miod_InterfDesc **idesc = clazz->interfaces;
@@ -42,6 +43,7 @@ void miod_inst_inc_ref(miod_BaseClassInstance *inst) {
 
 void miod_inst_dec_ref(miod_BaseClassInstance **pinst) {
     miod_BaseClassInstance *inst = *pinst;
+    miod_Class *clazz = inst->any_impl.clazz;
     int32_t counter = inst->any_impl.ref_counter;
     counter--;
     inst->any_impl.ref_counter = counter;
@@ -53,6 +55,7 @@ void miod_inst_dec_ref(miod_BaseClassInstance **pinst) {
         }
         free(inst);
         *pinst = NULL;
+        clazz->instance_count--;
     }
 }
 

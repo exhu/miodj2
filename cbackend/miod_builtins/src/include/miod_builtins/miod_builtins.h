@@ -41,6 +41,7 @@ typedef struct {
     // destructor
     miod_destroy_proc destroy_proc;
     size_t struct_size;
+    int32_t instance_count;
 } miod_Class;
 
 typedef struct {
