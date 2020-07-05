@@ -13,6 +13,8 @@ typedef struct {
     const char *name; // name with generic params
     // TODO generic param types
     miod_BaseVtbl *vtbl;
+    // NULL or pointer to NULL-terminated array of pointers to miod_Class
+    void **generic_param_classes;
 } miod_InterfDesc;
 
 struct _miod_BaseClassInstance;
@@ -42,6 +44,8 @@ typedef struct {
     miod_destroy_proc destroy_proc;
     size_t struct_size;
     int32_t instance_count;
+    // NULL or pointer to NULL-terminated array of pointers to miod_Class
+    void **generic_param_classes;
 } miod_Class;
 
 typedef struct {

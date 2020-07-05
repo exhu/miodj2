@@ -706,6 +706,8 @@ The code is not generated, but new types are registered with generic arguments
 stored in the meta data, so that you cannot cast OptionalEmpty!<Int> to
 OptionalEmpty!<Long>.
 
+All type info is generated only when the final program or DLL is built.
+
 Compilation units
 -----------------
 
