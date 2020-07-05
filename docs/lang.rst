@@ -706,13 +706,30 @@ The code is not generated, but new types are registered with generic arguments
 stored in the meta data, so that you cannot cast OptionalEmpty!<Int> to
 OptionalEmpty!<Long>.
 
-Compilation
------------
-
-All files at the same directory level produce a unit. The compiler accepts the
-list of source files for all the units used by the program. It searches for
-imports only in this list.
+Compilation units
+-----------------
 
 The compiler can accept unit names aliases to allow using platform specific
-implementation for a common unit, e.g. "os_linux", "os_win" for an import unit
-name "os".
+implementation or using multiple unit version for a common unit, e.g.
+"os_linux", "os_win" for an import unit name "os". But for normal usage a
+unit annotation must be used, e.g.:
+
+::
+
+    @_build_tags("win32", "threads")
+    @_build_tags("win64", "threads")
+    import threads.win
+
+    @_build_tags("linux")
+    import process.linux
+
+    @_build_tags("linux")
+    alias process = process.linux
+
+    @_build_tags("win")
+    alias process = process.windows
+
+
+The compiler receives a list of paths to search for units. Each unit is a single
+source file. Dots in unit names define a path separator, e.g. The unit name
+"mypackage.os.win32" means the source file "mypackage/os/win32.miod".
