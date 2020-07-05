@@ -728,6 +728,10 @@ unit annotation must be used, e.g.:
 
     @_build_tags("win")
     alias process = process.windows
+    
+    # make procedure accessible in unit tests
+    @_build_tags("test")
+    public alias my_private_proc = my_private_proc
 
 
 The compiler receives a list of paths to search for units. Each unit is a single

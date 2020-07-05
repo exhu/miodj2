@@ -1,4 +1,11 @@
 - [ ] Implement interfaces and RTTI in C
+    - [x] interfaces
+    - [x] classes
+    - [x] refcounter
+    - [ ] generics
+    - [ ] weak references
+    - [ ] optional value
+    - [ ] properties
 - [x] Comments to ast
 - [x] Docs to ast
 - [ ] Simplify lang. for only reference types, int, long, float, double, enum,
