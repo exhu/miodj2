@@ -6,6 +6,9 @@ from private import gen_ast, gen_text
 class TypeIdDesc:
     name: str = None
     parameters: Sequence['TypeIdDesc'] = None
+    def __init__(self, name, parameters = None):
+        self.name = name
+        self.parameters = parameters
 
 
 class PropertyDesc:
@@ -41,3 +44,19 @@ class MiodClassDesc:
 class MiodEnumDesc:
     pass
 
+
+
+# --- Standard interfaces and classes
+
+def hash_iface() -> MiodIntefaceDesc:
+    hash_proc = ProcDesc()
+    hash_proc.name = "hash";
+    hash_proc.return_type = TypeIdDesc('Int')
+
+    iface = MiodIntefaceDesc()
+    iface.name = "Hash";
+    iface.methods = [hash_proc]
+    return iface
+
+
+print(hash_iface())
