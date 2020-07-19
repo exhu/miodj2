@@ -1,0 +1,14 @@
++ generics is emulated only with class/interface names containing argument types names,
+    no need to support in runtime. Compiler-side only.
+> - scripts to generate C code structures
+- string, int, float etc. wrapper classes
+    - string
+    - int
+- optional value class
+    - empty
+    - value
+- weak references
+- enums
+    - enum = interface + static class instances
+- properties
+- metadata (runtime annotations)

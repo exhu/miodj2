@@ -397,8 +397,8 @@ implicitly.
     end
 
 
-Modules
--------
+Modules (DISCARDED! See Compilation Units)
+------------------------------------------
 
 Modules are namespaces.
 

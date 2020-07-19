@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
+// actual method table per interface per class
 typedef struct {
     // offset from the class instance pointer
     ptrdiff_t base_offset;
@@ -10,11 +11,9 @@ typedef struct {
 
 // interface table for an interface per each class that implements it
 typedef struct {
-    const char *name; // name with generic params
-    // TODO generic param types
+    // name with generic params, pattern: name_paramcls1_paramclsN
+    const char *name;
     miod_BaseVtbl *vtbl;
-    // NULL or pointer to NULL-terminated array of pointers to miod_Class
-    void **generic_param_classes;
 } miod_InterfDesc;
 
 struct _miod_BaseClassInstance;
@@ -34,6 +33,7 @@ typedef void (*miod_init_proc)(struct _miod_BaseClassInstance *inst);
 typedef void (*miod_destroy_proc)(struct _miod_BaseClassInstance *inst);
 
 typedef struct {
+    // name with generic params, pattern: name_paramcls1_paramclsN
     const char *name;
     // NULL terminated
     miod_InterfDesc **interfaces;
@@ -44,8 +44,6 @@ typedef struct {
     miod_destroy_proc destroy_proc;
     size_t struct_size;
     int32_t instance_count;
-    // NULL or pointer to NULL-terminated array of pointers to miod_Class
-    void **generic_param_classes;
 } miod_Class;
 
 typedef struct {
@@ -71,7 +69,7 @@ typedef struct _miod_BaseInterfaceInstance {
 // If a class implements this interfaces, then each call to set property will trigger
 // this method.
 typedef struct {
-    miod_BaseVtbl baseVtbl;
+    miod_BaseVtbl base;
     void (*on_property_updated)(void *this, const char *name);
 } miod_PropertyChangeNotifier;
 
@@ -85,7 +83,7 @@ void miod_interface_inst_inc_ref(miod_BaseInterfaceInstance *iinst);
 void miod_interface_inst_dec_ref(miod_BaseInterfaceInstance **piinst);
 
 // returns NULL or interface desc.,
-// TODO to support generics one must provide types, not just the name
+// To support generics one must provide interface name with classes names for args.
 miod_InterfDesc* miod_interface_desc_from_class(miod_BaseClassInstance *inst,
     const char *name);
 
