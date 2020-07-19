@@ -14,11 +14,12 @@ class PropertyDesc:
 class ProcDesc:
     name: str = None
     return_type: TypeIdDesc = None
+    args_types: Sequence[TypeIdDesc] = None
 
 
 class MiodIntefaceDesc:
     name: str = None
-    methods = None
+    methods: Sequence[ProcDesc] = None
     properties: Sequence[PropertyDesc] = None
 
 class MiodClassDesc:
