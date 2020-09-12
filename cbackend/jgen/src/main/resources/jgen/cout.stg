@@ -1,0 +1,10 @@
+unit_body(unit) ::= "#include \"<unit.name>\"
+<classes_impl(unit.classes)>
+"
+classes_impl(classes) ::= "<classes:impl_class()>"
+
+impl_class(cls) ::= "typedef struct tag_<cls.name> {} <cls.name>;<\n>"
+
+
+unit_header(unit) ::= "#pragma once
+#include \"src/include/miod_builtins/miod_builtins.h\""
