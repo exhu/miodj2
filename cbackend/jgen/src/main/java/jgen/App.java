@@ -34,6 +34,9 @@ public class App {
         proc.setName("my_proc");
         ArrayList<ClassDef> classes = new ArrayList<>();
         classes.add(cls);
+        ClassDef cls2 = new ClassDef();
+        cls2.setName("MyClass2");
+        classes.add(cls2);
         unit.setClasses(classes);
         cb.add("unit", unit);
         System.out.print(cb.render());

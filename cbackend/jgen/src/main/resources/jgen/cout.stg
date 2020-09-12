@@ -1,10 +1,14 @@
-unit_body(unit) ::= "#include \"<unit.name>\"
+unit_body(unit) ::= <<#include "<unit.name>.h"
 <classes_impl(unit.classes)>
-"
-classes_impl(classes) ::= "<classes:impl_class()>"
+>>
 
-impl_class(cls) ::= "typedef struct tag_<cls.name> {} <cls.name>;<\n>"
+classes_impl(classes) ::= "<classes:impl_class();separator=\"\n\n\">"
+
+impl_class(cls) ::= <<typedef struct tag_<cls.name> {
+
+} <cls.name>;
+>>
 
 
-unit_header(unit) ::= "#pragma once
-#include \"src/include/miod_builtins/miod_builtins.h\""
+unit_header(unit) ::= <<pragma once
+#include "src/include/miod_builtins/miod_builtins.h">>
