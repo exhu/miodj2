@@ -4,40 +4,27 @@
 package jgen;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
-public class App {
-    public String getGreeting() {
-        return "Hello world.";
-    }
-
+public final class App {
     public static void main(String[] args) {
-        /*
-        System.out.println(new App().getGreeting());
-        ST hello = new ST("Hello, <name>!");
-        hello.add("name", "World");
-        String output = hello.render();
-        System.out.println(output);
-        */
-
         STGroupFile groupFile = new STGroupFile(App.class.getClassLoader()
             .getResource("jgen/cout.stg"));
 
         ST cb = groupFile.getInstanceOf("unit_body");
         UnitDef unit = new UnitDef();
         unit.setName("myunit");
-        ClassDef cls = new ClassDef();
-        cls.setName("MyClass");
+        unit.setImports(Arrays.asList("miod_sys"));
         ProcDef proc = new ProcDef();
         proc.setName("my_proc");
-        ArrayList<ClassDef> classes = new ArrayList<>();
-        classes.add(cls);
+        ClassDef cls = new ClassDef();
+        cls.setName("MyClass");
         ClassDef cls2 = new ClassDef();
         cls2.setName("MyClass2");
-        classes.add(cls2);
-        unit.setClasses(classes);
+        unit.setClasses(Arrays.asList(cls, cls2));
         cb.add("unit", unit);
         System.out.print(cb.render());
     }

@@ -6,6 +6,7 @@ public final class UnitDef {
     private String name;
     private List<ClassDef> classes;
     private List<ProcDef> procs;
+    private List<String> imports;
 
 	public String getName() {
 		return name;
@@ -29,6 +30,14 @@ public final class UnitDef {
 
     public void setProcs(List<ProcDef> procs) {
         this.procs = procs;
+    }
+
+    public List<String> getImports() {
+        return imports;
+    }
+
+    public void setImports(List<String> imports) {
+        this.imports = imports;
     }
     
     
