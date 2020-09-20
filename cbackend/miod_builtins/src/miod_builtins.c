@@ -1,13 +1,12 @@
 #include "miod_builtins/miod_builtins.h"
 
 #include <assert.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 
-miod_BaseClassInstance *miod_new_instance(miod_Class *clazz) {
+void miod_init_instance(miod_BaseClassInstance *inst, miod_Class *clazz) {
     const size_t sz = clazz->struct_size;
     assert(sz > 0);
-    miod_BaseClassInstance *inst = malloc(sz);
     memset(inst, 0, sz);
     inst->any_impl.ref_counter = 1;
     inst->any_impl.clazz = clazz;
@@ -29,6 +28,13 @@ miod_BaseClassInstance *miod_new_instance(miod_Class *clazz) {
     if (clazz->init_proc != NULL) {
         clazz->init_proc(inst);
     }
+}
+
+miod_BaseClassInstance *miod_new_instance(miod_Class *clazz) {
+    const size_t sz = clazz->struct_size;
+    assert(sz > 0);
+    miod_BaseClassInstance *inst = malloc(sz);
+    miod_init_instance(inst, clazz);
     return inst;
 }
 

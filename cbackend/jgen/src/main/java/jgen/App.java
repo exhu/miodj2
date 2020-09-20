@@ -3,18 +3,13 @@
  */
 package jgen;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
 public final class App {
-    public static void main(String[] args) {
-        STGroupFile groupFile = new STGroupFile(App.class.getClassLoader()
-            .getResource("jgen/cout.stg"));
-
-        ST cb = groupFile.getInstanceOf("unit_body");
+    public static UnitDef makeUnit() {
         UnitDef unit = new UnitDef();
         unit.setName("myunit");
         unit.setImports(Arrays.asList("miod_sys"));
@@ -25,7 +20,20 @@ public final class App {
         ClassDef cls2 = new ClassDef();
         cls2.setName("MyClass2");
         unit.setClasses(Arrays.asList(cls, cls2));
-        cb.add("unit", unit);
-        System.out.print(cb.render());
+        return unit;
+    }
+    public static void main(String[] args) {
+        UnitDef unit = makeUnit();
+
+        STGroupFile groupFile = new STGroupFile(App.class.getClassLoader()
+            .getResource("jgen/cout.stg"));
+
+        ST unitImpl = groupFile.getInstanceOf("unit_body");
+        unitImpl.add("unit", unit);
+        System.out.print(unitImpl.render());
+
+        ST unitHeader = groupFile.getInstanceOf("unit_header");
+        unitHeader.add("unit", unit);
+        System.out.print(unitHeader.render());
     }
 }

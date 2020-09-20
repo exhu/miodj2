@@ -3,6 +3,7 @@ package jgen;
 import java.util.List;
 
 public final class UnitDef {
+    // pattern: "full_unit_name"
     private String name;
     private List<ClassDef> classes;
     private List<ProcDef> procs;

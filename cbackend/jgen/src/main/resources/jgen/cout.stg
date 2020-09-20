@@ -1,19 +1,47 @@
-unit_body(unit) ::= <<#include "<unit.name>.h"
+// C implementation
+
+unit_body(unit) ::= <<
+// Generated implementation by jgen for unit "<unit.name>"
+#include "<unit.name>.h"
 <classes_impl(unit.classes)>
 
 >>
 
 classes_impl(classes) ::= "<classes:impl_class();separator=\"\n\n\">"
 
-impl_class(cls) ::= <<typedef struct tag_<cls.name> {
-
-} <cls.name>;
+impl_class(cls) ::= <<
+miod_Class <cls.name>Class = {
+    .name = "<cls.name>",
+    .interfaces = NULL,
+    .properties = NULL,
+    .init_proc = NULL,
+    .destroy_proc = NULL,
+    .struct_size = sizeof(<cls.name>Inst);
+    .instance_count = 0,
+};
 >>
 
+// C header
 
-unit_header(unit) ::= <<pragma once
-#include "src/include/miod_builtins/miod_builtins.h"
+unit_header(unit) ::= <<
+// Generated header by jgen for unit "<unit.name>"
+#pragma once
 <unit.imports:include_import();separator="\n">
+#include "miod_builtins/miod_builtins.h"
+
+<unit.classes:decl_instance_struct();separator="\n">
+
 >>
 
 include_import(unit_name) ::= "#include \"<unit_name>.h\""
+
+decl_instance_struct(cls) ::= <<
+// instance for "<cls.name>"
+typedef struct tag_<cls.name>Inst {
+    miod_BaseClassInstance base;
+    // TODO member variables, interface structs
+} <cls.name>Inst;
+
+extern miod_Class <cls.name>Class;
+
+>>
