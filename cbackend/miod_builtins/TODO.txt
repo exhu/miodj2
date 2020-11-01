@@ -15,3 +15,4 @@
     - enum = interface + static class instances
 - properties
 - metadata (runtime annotations)
+- abi stability (backwards compatibility with older binaries for dylibs)

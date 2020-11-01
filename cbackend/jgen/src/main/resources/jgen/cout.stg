@@ -10,13 +10,13 @@ unit_body(unit) ::= <<
 classes_impl(classes) ::= "<classes:impl_class();separator=\"\n\n\">"
 
 impl_class(cls) ::= <<
-miod_Class <cls.name>Class = {
-    .name = "<cls.name>",
+miod_Class <cls.mangledName>Class = {
+    .name = "<cls.fullName>",
     .interfaces = NULL,
     .properties = NULL,
     .init_proc = NULL,
     .destroy_proc = NULL,
-    .struct_size = sizeof(<cls.name>Inst);
+    .struct_size = sizeof(<cls.mangledName>);
     .instance_count = 0,
 };
 >>
@@ -41,15 +41,15 @@ include_import(unit_name) ::= "#include \"<unit_name>.h\""
 
 decl_instance_struct(cls) ::= <<
 // instance for "<cls.name>"
-struct <cls.name>Inst {
+struct <cls.mangledName> {
     miod_BaseClassInstance base;
     // TODO member variables, interface structs
 };
 
-extern miod_Class <cls.name>Class;
+extern miod_Class <cls.mangledName>Class;
 
 >>
 
 forward_decl_instance_struct(cls) ::= <<
-typedef struct <cls.name>Inst <cls.name>Inst;
+typedef struct <cls.mangledName> <cls.mangledName>;
 >>

@@ -15,18 +15,16 @@ public final class App {
         unit.setImports(Arrays.asList("miod_sys"));
         ProcDef proc = new ProcDef();
         proc.setName("my_proc");
-        ClassDef cls = new ClassDef();
-        cls.setName("MyClass");
-        ClassDef cls2 = new ClassDef();
-        cls2.setName("MyClass2");
+        ClassDef cls = new ClassDef("MyClass", "myunit");
+        ClassDef cls2 = new ClassDef("MyClass2", "myunit");
         unit.setClasses(Arrays.asList(cls, cls2));
         return unit;
     }
+
     public static void main(String[] args) {
         UnitDef unit = makeUnit();
 
-        STGroupFile groupFile = new STGroupFile(App.class.getClassLoader()
-            .getResource("jgen/cout.stg"));
+        STGroupFile groupFile = new STGroupFile(App.class.getClassLoader().getResource("jgen/cout.stg"));
 
         ST unitImpl = groupFile.getInstanceOf("unit_body");
         unitImpl.add("unit", unit);
