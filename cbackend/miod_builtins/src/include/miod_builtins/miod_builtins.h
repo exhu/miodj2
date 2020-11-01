@@ -16,11 +16,11 @@ typedef struct {
     miod_BaseVtbl *vtbl;
 } miod_InterfDesc;
 
-struct _miod_BaseClassInstance;
+typedef struct miod_BaseClassInstance miod_BaseClassInstance;
 
 // TODO optimize for primitive types
-typedef struct _miod_BaseClassInstance *(*miod_getter)(void);
-typedef void (*miod_setter)(struct _miod_BaseClassInstance *);
+typedef miod_BaseClassInstance *(*miod_getter)(void);
+typedef void (*miod_setter)(miod_BaseClassInstance *);
 
 typedef struct {
     const char *name;
@@ -29,8 +29,8 @@ typedef struct {
     miod_setter *setter;
 } miod_Property;
 
-typedef void (*miod_init_proc)(struct _miod_BaseClassInstance *inst);
-typedef void (*miod_destroy_proc)(struct _miod_BaseClassInstance *inst);
+typedef void (*miod_init_proc)(miod_BaseClassInstance *inst);
+typedef void (*miod_destroy_proc)(miod_BaseClassInstance *inst);
 
 typedef struct {
     // name with generic params, pattern: name_paramcls1_paramclsN
@@ -52,18 +52,19 @@ typedef struct {
     miod_Class *clazz;
 } miod_AnyTypeImpl;
 
-typedef struct _miod_BaseClassInstance {
+struct miod_BaseClassInstance {
     miod_AnyTypeImpl any_impl;
     // class fields, interface function pointers
     // miod_BaseInterfaceInstance iface1;
     // miod_BaseInterfaceInstance iface2;
-} miod_BaseClassInstance;
+};
 
-typedef struct _miod_BaseInterfaceInstance {
+typedef struct miod_BaseInterfaceInstance miod_BaseInterfaceInstance;
+struct miod_BaseInterfaceInstance {
     // we always know the type in the source file, so no need to store instance ptr
     // miod_BaseClassInstance *base_instance;
     miod_BaseVtbl *vtbl;
-} miod_BaseInterfaceInstance;
+};
 
 // PropertyChangeNotifier interface vtbl
 // If a class implements this interfaces, then each call to set property will trigger

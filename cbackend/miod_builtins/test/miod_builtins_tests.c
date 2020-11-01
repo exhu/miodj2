@@ -82,12 +82,12 @@ static void test_new_instance() {
     assert(inst == NULL);
 }
 
-static void myclass_init_proc(struct _miod_BaseClassInstance *inst) {
+static void myclass_init_proc(miod_BaseClassInstance *inst) {
     MyClassWithFieldInst *myinst = (MyClassWithFieldInst*)inst;
     myinst->test_field = 12345678;
 }
 
-static void myclass_destroy_proc(struct _miod_BaseClassInstance *inst) {
+static void myclass_destroy_proc(miod_BaseClassInstance *inst) {
     MyClassWithFieldInst *myinst = (MyClassWithFieldInst*)inst;
     assert(myinst->test_ptr != NULL);
     myinst->test_ptr[0] = 98765432;
