@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.17)
+include(ExternalProject)
+project(buildins_usage)
+set(installDir ${CMAKE_CURRENT_BINARY_DIR}/install)
+ExternalProject_Add(miod_builtins_lib
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../miod_builtins
+    INSTALL_DIR ${installDir}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DCMAKE_PREFIX_PATH:PATH=<INSTALL_DIR> -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})
+ExternalProject_Add(hello
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src
+    INSTALL_DIR ${installDir}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DCMAKE_PREFIX_PATH:PATH=<INSTALL_DIR> -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    BUILD_ALWAYS YES)

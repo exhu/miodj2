@@ -3,7 +3,7 @@
 + add runtime generic types to instance to allow safe upcasting form Object to Some$<a,b>
     - implement via embidding into class name
 > - scripts to generate C code structures
-    - use java + StringTemplate
+    + use java + StringTemplate
 - string, int, float etc. wrapper classes
     - string
     - int

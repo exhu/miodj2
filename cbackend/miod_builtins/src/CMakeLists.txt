@@ -12,7 +12,8 @@ add_library(miod_builtins_lib ${SOURCES} ${PUBLIC_HEADERS})
 set_target_properties(miod_builtins_lib PROPERTIES OUTPUT_NAME miod_builtins)
 target_compile_features(miod_builtins_lib PUBLIC c_std_99)
 target_include_directories(miod_builtins_lib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-target_include_directories(miod_builtins_lib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+target_include_directories(miod_builtins_lib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 set_target_properties(miod_builtins_lib PROPERTIES
     PUBLIC_HEADER ${PUBLIC_HEADERS}
