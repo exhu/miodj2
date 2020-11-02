@@ -2,7 +2,7 @@
     no need to support in runtime. Compiler-side only.
 + add runtime generic types to instance to allow safe upcasting form Object to Some$<a,b>
     - implement via embidding into class name
-> - scripts to generate C code structures
++ research scripts to generate C code structures
     + use java + StringTemplate
 - string, int, float etc. wrapper classes
     - string
