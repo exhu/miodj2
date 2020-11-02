@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 include(FetchContent)
 project(buildins_usage2)
-FetchContent_Declare(miod_builtins SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../miod_builtins)
+set(MIOD_RUNTIME_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../miod_builtins CACHE PATH "Path to miod_builtins dir.")
+FetchContent_Declare(miod_builtins SOURCE_DIR ${MIOD_RUNTIME_SRC_DIR})
 FetchContent_MakeAvailable(miod_builtins)
 add_subdirectory(src)
