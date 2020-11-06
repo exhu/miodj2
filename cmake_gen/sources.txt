@@ -1,0 +1,2 @@
+set(GEN_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/hello.c)
+set(GEN_SOURCES_INPUT hello_src.c)
