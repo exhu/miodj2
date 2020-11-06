@@ -109,3 +109,12 @@ miod_BaseInterfaceInstance* miod_interface_from_class(miod_BaseClassInstance *in
     miod_BaseInterfaceInstance *iinst = (miod_BaseInterfaceInstance*)(pinst + interf->vtbl->base_offset);
     return iinst;
 }
+
+
+bool miod_is_same_class(miod_Class *clazz_a, miod_Class *clazz_b) {
+    if (clazz_a == clazz_b) return true;
+    if (clazz_a->struct_size == clazz_b->struct_size &&
+        strcmp(clazz_a->name, clazz_b->name) == 0) return true;
+
+    return false;
+}

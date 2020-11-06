@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
 
@@ -91,3 +92,8 @@ miod_InterfDesc* miod_interface_desc_from_class(miod_BaseClassInstance *inst,
 // NULL if any argument is null
 miod_BaseInterfaceInstance* miod_interface_from_class(miod_BaseClassInstance *inst,
     miod_InterfDesc *interf);
+
+// Upcasting support. Need to check for compatible generic classes defined in
+// different precompiled packages.
+// NULL class pointers are not supported!
+bool miod_is_same_class(miod_Class *clazz_a, miod_Class *clazz_b);

@@ -207,6 +207,36 @@ static void test_interface_inc_dec_ref() {
     assert(clazz.instance_count == 0);
 }
 
+static void test_same_class() {
+    miod_Class clazz_a;
+    memset(&clazz_a, 0, sizeof(clazz_a));
+    clazz_a.name = "MyClassA";
+    clazz_a.struct_size = sizeof(MyClassWithFieldInst);
+
+    // same size as a
+    miod_Class clazz_b;
+    memset(&clazz_b, 0, sizeof(clazz_b));
+    clazz_b.name = "MyClassB";
+    clazz_b.struct_size = clazz_a.struct_size;
+
+    // same name as a
+    miod_Class clazz_c;
+    memset(&clazz_c, 0, sizeof(clazz_c));
+    clazz_c.name = clazz_a.name;
+    clazz_c.struct_size = clazz_a.struct_size + 16;
+
+    // same as a, different pointer
+    miod_Class clazz_d;
+    memset(&clazz_d, 0, sizeof(clazz_d));
+    clazz_d.name = clazz_a.name;
+    clazz_d.struct_size = clazz_a.struct_size;
+
+    assert(miod_is_same_class(&clazz_a, &clazz_a) == true);
+    assert(miod_is_same_class(&clazz_a, &clazz_b) == false);
+    assert(miod_is_same_class(&clazz_a, &clazz_c) == false);
+    assert(miod_is_same_class(&clazz_a, &clazz_d) == true);
+}
+
 
 int main() {
     test_no_interfaces();
@@ -217,5 +247,6 @@ int main() {
     test_class_inst_from_interface();
     test_inst_inc_dec_ref();
     test_interface_inc_dec_ref();
+    test_same_class();
     return 0;
 }
