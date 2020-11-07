@@ -21,12 +21,13 @@ miod_sources_to_c("${MIOD_SOURCES}" "${CMAKE_CURRENT_BINARY_DIR}" GENERATED_C_SO
 
 miod_collect_all_tags("${MIOD_TAGS}" ENABLED_TAGS)
 
-list(JOIN ENABLED_TAGS ",\n" JOINED_TAGS)
-list(JOIN GENERATED_C_SOURCES ",\n" JOINED_SOURCES)
-
-file(WRITE enabled_tags.txt ${JOINED_TAGS})
-file(WRITE enabled_sources.txt ${JOINED_SOURCES})
-
+miod_write_build_params("${ENABLED_TAGS}" "${MIOD_SOURCES}" "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_LIST_DIR}")
 # TODO different tags lists and sources for Debug, Release etc configurations
 
 # TODO simmulate C generation
+
+add_library(miodlib "${GENERATED_C_SOURCES}")
+
+add_custom_command(OUTPUT ${GENERATED_C_SOURCES} COMMAND ${CMAKE_COMMAND}
+    ARGS -P "${CMAKE_CURRENT_LIST_DIR}/fake_compiler.cmake"
+    DEPENDS ${MIOD_SOURCES} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})

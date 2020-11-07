@@ -57,3 +57,11 @@ function(miod_collect_all_tags TAG_NAMES RESULT_VAR)
 
     set(${RESULT_VAR} "${OUT_TAGS}" PARENT_SCOPE)
 endfunction()
+
+
+function(miod_write_build_params TAG_NAMES SOURCES OUT_BINARY_DIR SOURCES_DIR)
+    list(JOIN TAG_NAMES " " TAG_NAMES)
+    list(JOIN SOURCES " " SOURCES)
+    set(BUILD_PARAMS_CONTENTS "set(MIOD_SOURCES_DIR ${SOURCES_DIR})\nset(MIOD_TAGS ${TAG_NAMES})\nset(MIOD_SOURCES ${SOURCES})\n")
+    file(WRITE "${OUT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/miod_build_params.txt" ${BUILD_PARAMS_CONTENTS})
+endfunction()
