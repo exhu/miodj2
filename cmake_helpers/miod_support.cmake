@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 
+# see miod_declare_tags(), miod_add_compiler_command() for usage below.
+
 list(LENGTH CMAKE_CONFIGURATION_TYPES CONF_COUNT)
 if(CONF_COUNT GREATER 1)
     message(FATAL_ERROR "Multiple build types = ${CMAKE_CONFIGURATION_TYPES} are not supported")
@@ -69,4 +71,23 @@ function(miod_write_build_params TAG_NAMES SOURCES OUT_BINARY_DIR SOURCES_DIR)
     list(JOIN SOURCES " " SOURCES)
     set(BUILD_PARAMS_CONTENTS "set(MIOD_SOURCES_DIR ${SOURCES_DIR})\nset(MIOD_TAGS ${TAG_NAMES})\nset(MIOD_SOURCES ${SOURCES})\n")
     file(WRITE "${OUT_BINARY_DIR}/miod_build_params.txt" ${BUILD_PARAMS_CONTENTS})
+endfunction()
+
+
+# The only function you need to build miod files.
+# MIOD_TAGS = list of all declared tags
+# SOURCES_ROOT = package root path (CMAKE_CURRENT_LIST_DIR)
+# MIOD_SOURCES = list of relative paths to miod files 
+# C_OUT_DIR = binary dir for generated C sources (CMAKE_CURRENT_BINARY_DIR)
+# RESULT_VAR_GENERATED_SOURCES = variable name for generated list of C sources paths
+function(miod_add_compiler_command MIOD_TAGS SOURCES_ROOT MIOD_SOURCES C_OUT_DIR RESULT_VAR_GENERATED_SOURCES)
+    miod_sources_to_c("${MIOD_SOURCES}" "${C_OUT_DIR}" GENERATED_C_SOURCES)
+    miod_collect_all_tags("${MIOD_TAGS}" ENABLED_TAGS)
+    miod_write_build_params("${ENABLED_TAGS}" "${MIOD_SOURCES}" "${C_OUT_DIR}" "${SOURCES_ROOT}")
+
+    add_custom_command(OUTPUT ${GENERATED_C_SOURCES} COMMAND ${CMAKE_COMMAND}
+        ARGS -P "${CMAKE_CURRENT_LIST_DIR}/fake_compiler.cmake"
+        DEPENDS ${MIOD_SOURCES} WORKING_DIRECTORY ${C_OUT_DIR})
+
+    set(${RESULT_VAR_GENERATED_SOURCES} "${GENERATED_C_SOURCES}" PARENT_SCOPE)
 endfunction()
