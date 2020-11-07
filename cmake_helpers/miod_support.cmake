@@ -23,9 +23,9 @@ endfunction()
 
 # Sets CACHE variables, TAG_NAMES = list of tags, OPTIONAL_DESCRIPTIONS -- list
 # of descriptions, can be empty
-function(miod_declare_tags TAG_NAMES OPTIONAL_DESCRIPTIONS)
+function(miod_declare_tags TAG_NAMES OPTIONAL_DESCRIPTIONS DEFAULT_VALUE)
     foreach(tag desc IN ZIP_LISTS TAG_NAMES OPTIONAL_DESCRIPTIONS)
-        set(MIOD_TAG_${tag} OFF CACHE BOOL "${desc}")
+        set(MIOD_TAG_${tag} ${DEFAULT_VALUE} CACHE BOOL "${desc}")
     endforeach()
 endfunction()
 
@@ -47,18 +47,11 @@ endfunction()
 # on the cmake compilation info.
 function(miod_collect_all_tags TAG_NAMES RESULT_VAR)
     set(OUT_TAGS)
-    miod_collect_tags(TAG_NAMES OUT_TAGS)
+    miod_collect_tags("${TAG_NAMES}" OUT_TAGS)
     # Debug, Release, RelWithDebInfo
     if(CMAKE_BUILD_TYPE STREQUAL Debug)
         list(APPEND OUT_TAGS debug)
-    endif()
-    if(CMAKE_BUILD_TYPE STREQUAL Release)
-        list(APPEND OUT_TAGS release)
-    endif()
-    if(CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo)
-        list(APPEND OUT_TAGS release)
-    endif()
-    if(CMAKE_BUILD_TYPE STREQUAL MinSizeRel)
+    else()
         list(APPEND OUT_TAGS release)
     endif()
 
