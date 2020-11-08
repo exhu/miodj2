@@ -11,3 +11,4 @@ miod_parser/.classpath
 miod_parser/.settings/
 miod_parser/src/main/antlr/org/miod/parser/generated/.antlr
 __pycache__/
+cbackend/jgen/.classpath
