@@ -1,4 +1,7 @@
-package org.miod.ast;
+package org.miod.ast.builtins;
+
+import org.miod.ast.NodeLocation;
+import org.miod.ast.TypeDecl;
 
 // "int" type node.
 public final class IntegerTypeDecl extends TypeDecl {
