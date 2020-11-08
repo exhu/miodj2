@@ -40,7 +40,7 @@ public class ParsingTests {
 
         @Override
         public void exitUnitHeader(UnitHeaderContext ctx) {
-            pkgName = ctx.bareName().ID().getText();
+            pkgName = ctx.fullId().getText();
         }
 
         @Override
@@ -67,7 +67,7 @@ public class ParsingTests {
 
         assertEquals("t1", listener.pkgName);
         assertEquals("# comments1\n", listener.comments.get(0));
-        assertEquals("## docs1\n", listener.docs.get(0));
+        assertEquals("## docs1\n## doc1 line2\n", listener.docs.get(0));
     }
 
     @Test
@@ -81,8 +81,8 @@ public class ParsingTests {
 
         AstBuilder builder = new AstBuilder();
         builder.parse(tree, url);
-        LOGGER.info(builder.getRoot().getPackageName());
-        assertEquals("t1", builder.getRoot().getPackageName());
+        LOGGER.info(builder.getRoot().getName());
+        assertEquals("t1", builder.getRoot().getName());
         Comment comments = (Comment) builder.getRoot().getSubnodes().get(0);
         Doc docs = (Doc) builder.getRoot().getSubnodes().get(1);
         assertEquals("# comments1\n", comments.getText());

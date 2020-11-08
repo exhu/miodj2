@@ -26,7 +26,7 @@ Features
     except to pass between C and Miod)
 - no null pointers
 - multiple return values
-- multiple source files per package, single namespace (like in Golang)
+- DISCARDED: multiple source files per package, single namespace (like in Golang)
 - conditional compilation like in Golang (tags-based)
 - coroutines (like in Lua)
 - annotations like in Java
@@ -41,7 +41,7 @@ Build layout
 
 A package is a set of files.
 Each of the source files can refer to symbols defined in the other files
-of the package.
+of the package. A single file of a package is called a unit.
 
 Compilation produces header files for public symbols and C sources for
 the implementation. CMake or other project description is generated as well.
@@ -458,7 +458,7 @@ Modules are namespaces.
 Properties and fields
 ---------------------
 
-Class fields are not accessible beyond the package they are declared in.
+Class fields are not accessible beyond the unit they are declared in.
 Properties are public, accessible everywhere. Read-only properties are set
 during object creation:
 
@@ -736,18 +736,20 @@ unit annotation must be used, e.g.:
 
 ::
 
+    unit myprog::main
+
     @_build_tags("win32", "threads")
     @_build_tags("win64", "threads")
-    import threads.win
+    import threads::win
 
     @_build_tags("linux")
-    import process.linux
+    import process::linux
 
     @_build_tags("linux")
-    alias process = process.linux
+    alias process = process::linux
 
     @_build_tags("win")
-    alias process = process.windows
+    alias process = process::windows
     
     # make procedure accessible in unit tests
     @_build_tags("test")
@@ -755,5 +757,15 @@ unit annotation must be used, e.g.:
 
 
 The compiler receives a list of paths to search for units. Each unit is a single
-source file. Dots in unit names define a path separator, e.g. The unit name
-"mypackage.os.win32" means the source file "mypackage/os/win32.miod".
+source file. Colons in unit names define a path separator, e.g. The unit name
+"mypackage::os::win32" means the source file "mypackage/os/win32.miod".
+
+
+Symbols visibility
+------------------
+
+Three levels of visibility:
+    - private, accessible only inside the unit
+    - public, accessible everywhere
+    - package, accessible only within package namespace
+

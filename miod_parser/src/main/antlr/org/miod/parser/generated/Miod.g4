@@ -2,12 +2,10 @@ grammar Miod;
 
 compUnit: comments? unitHeader unitBody EOF;
 
-unitHeader: buildTags? docs? PACKAGE bareName NEWLINE;
+unitHeader: buildTags? docs? UNIT fullId NEWLINE;
 
-namespaceSep: DOT;
-memberAccess: DOT;
-bareName: ID;
-qualifName: pkg=ID namespaceSep sym=ID;
+fullId: (ID NAMESPACE_SEP)* ID;
+id: ID;
 
 comments: COMMENT+;
 docs: DOC_COMMENT+;
@@ -66,7 +64,7 @@ WS: (' ' | '\t')+ -> skip;
 
 
 // keywords
-PACKAGE: 'package';
+UNIT: 'unit';
 CONST: 'const';
 BUILD_FOR: 'build_for';
 PUBLIC: 'public';
@@ -127,6 +125,7 @@ ARRAY: 'array';
 OPEN_BRACKET: '[';
 CLOSE_BRACKET: ']';
 DOT: '.';
+NAMESPACE_SEP: '::';
 FOR: 'for';
 IN: 'in';
 END_FOR: 'end_for';

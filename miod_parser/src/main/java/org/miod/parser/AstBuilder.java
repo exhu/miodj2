@@ -37,7 +37,7 @@ public final class AstBuilder extends MiodBaseListener {
     @Override
     public void enterCompUnit(CompUnitContext ctx) {
         NodeLocation rootLoc = ParserUtils.locationFromContext(ctx, rootUrl);
-        root = new CompUnit(rootLoc, ctx.unitHeader().bareName().getText());
+        root = new CompUnit(rootLoc, ctx.unitHeader().fullId().getText());
         prevParent = root;
     }
 

@@ -8,6 +8,7 @@ import java.util.Set;
 
 public final class PackageContext {
     private final List<Path> importPaths = new ArrayList<>();
+    private final List<Path> sources = new ArrayList<>();
     private final Set<String> buildTags = new HashSet<>();
-    
+
 }

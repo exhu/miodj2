@@ -1,14 +1,14 @@
 package org.miod.ast;
 
 public final class CompUnit extends AstNode {
-    private final String packageName;
+    private final String name;
 
-    public CompUnit(NodeLocation loc, String packageName) {
+    public CompUnit(NodeLocation loc, String name) {
         super(loc);
-        this.packageName = packageName;
+        this.name = name;
     }
 
-    public String getPackageName() {
-        return packageName;
+    public String getName() {
+        return name;
     }
 }
