@@ -29,4 +29,10 @@ public final class NodeLocation {
         this.end = end;
         this.url = url;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s(%d,%d - %d,%d)", url != null ? url.toString() : "null", start.line, start.column,
+                end.line, end.column);
+    }
 }
