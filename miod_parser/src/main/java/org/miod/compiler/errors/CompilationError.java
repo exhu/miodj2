@@ -1,5 +1,13 @@
 package org.miod.compiler.errors;
 
-public interface CompilationError {
-    String getMessage();
+public abstract class CompilationError {
+    protected final String msg;
+
+    protected CompilationError(String msg) {
+        this.msg = msg;
+    }
+
+    public String getMessage() {
+        return msg;
+    }
 }
