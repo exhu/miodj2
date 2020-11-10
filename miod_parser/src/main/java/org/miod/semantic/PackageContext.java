@@ -1,17 +1,13 @@
 package org.miod.semantic;
 
-import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+// TODO remove
+@Deprecated
 public interface PackageContext {
     /// root unit name/package name
     String getName();
-
-    List<Path> getImportPaths();
-
-    Set<String> getBuildTags();
 
     /// processed units within this package, key = full unit name
     /// (package::unit::..unit)
@@ -19,4 +15,7 @@ public interface PackageContext {
 
     /// imported packages with their units, key = only root unit name (package name)
     Map<String, PackageContext> getImportedPackages();
+
+    /// TODO generic classes used by the package to generate class info
+    Set<String> getGenericInstances();
 }

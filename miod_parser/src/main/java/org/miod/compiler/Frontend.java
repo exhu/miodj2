@@ -1,15 +1,9 @@
 package org.miod.compiler;
 
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Set;
 
 public interface Frontend {
-    // void setSources(List<Path> sources);
-
-    void setBuildTags(Set<String> tags);
-
-    void setSearchRoots(List<Path> roots);
+    void setBuildContext(BuildContext buildContext);
 
     // parse, syntax check phase
     ParseResult check(Path src);
