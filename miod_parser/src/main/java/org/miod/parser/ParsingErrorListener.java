@@ -25,6 +25,11 @@ public final class ParsingErrorListener implements ANTLRErrorListener {
             this.pos = pos;
             this.msg = msg;
         }
+
+        @Override
+        public String toString() {
+            return String.format("%(d,%d) at %s: '%s'.", line, pos, symbol.toString(), msg);
+        }
     }
 
     private static final Logger LOGGER = Logger.getLogger(ParsingErrorListener.class.getName());

@@ -10,7 +10,9 @@ public final class SemanticResults {
         this.results = results;
         int errors = 0;
         for (SemanticResult result : results) {
-            errors += result.errors.size();
+            if (result.errors != null) {
+                errors += result.errors.size();
+            }
         }
         totalErrors = errors;
     }
