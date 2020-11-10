@@ -9,9 +9,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -19,6 +24,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 import org.miod.ast.Comment;
 import org.miod.ast.Doc;
+import org.miod.compiler.BuildContextImpl;
 import org.miod.parser.AstBuilder;
 import org.miod.parser.ParserUtils;
 import org.miod.parser.ParsingErrorListener;
@@ -87,6 +93,21 @@ public class ParsingTests {
         Doc docs = (Doc) builder.getRoot().getSubnodes().get(1);
         assertEquals("# comments1\n", comments.getText());
         assertEquals("## docs1\n## doc1 line2\n", docs.getText());
+    }
+
+    @Test
+    public void testBuildContextImplUnitPath() throws URISyntaxException {
+        URL url = ParserUtils.getUrlFromResource("t1.miod");
+        Path t1Path = Path.of(url.toURI());
+        Path t1Root = t1Path.getParent();
+        List<Path> importPaths = new ArrayList<>();
+        List<Path> sources = new ArrayList<>();
+        sources.add(t1Path);
+        importPaths.add(t1Root);
+        BuildContextImpl ctx = new BuildContextImpl(new HashSet<>(), importPaths, sources, Paths.get(""));
+        Optional<Path> unitPath = ctx.unitPathFromName("t1");
+        assertTrue(unitPath.isPresent());
+        assertEquals(t1Path, unitPath.get());
     }
 
 }

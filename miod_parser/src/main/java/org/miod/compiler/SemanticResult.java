@@ -2,7 +2,6 @@ package org.miod.compiler;
 
 import java.util.List;
 
-import org.miod.ast.AstNode;
 import org.miod.compiler.errors.CompilationError;
 import org.miod.semantic.UnitContext;
 

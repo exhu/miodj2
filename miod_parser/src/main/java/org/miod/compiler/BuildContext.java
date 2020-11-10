@@ -3,6 +3,7 @@ package org.miod.compiler;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.miod.semantic.UnitContext;
@@ -17,5 +18,8 @@ public interface BuildContext {
     /// (package::unit::..unit)
     Map<String, UnitContext> getProcessedUnits();
 
-    Path unitPathFromName(String unitName);
+    // Fails if no such file exists.
+    Optional<Path> unitPathFromName(String unitName);
+
+    Path getOutputPath();
 }
