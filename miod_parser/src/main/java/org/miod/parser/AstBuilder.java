@@ -1,6 +1,6 @@
 package org.miod.parser;
 
-import java.net.URL;
+import java.nio.file.Path;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -16,17 +16,17 @@ import org.miod.parser.generated.MiodParser.DocsContext;
 
 public final class AstBuilder extends MiodBaseListener {
     private CompUnit root;
-    private URL rootUrl;
+    private Path unitPath;
     private AstNode prevParent = null;
 
     public AstBuilder() {
     }
 
-    public void parse(ParseTree tree, URL rootUrl) {
+    public void parse(ParseTree tree, Path unitPath) {
         if (root != null) {
             throw new RuntimeException("already parsed!");
         }
-        this.rootUrl = rootUrl;
+        this.unitPath = unitPath;
         ParseTreeWalker.DEFAULT.walk(this, tree);
     }
 
@@ -36,20 +36,20 @@ public final class AstBuilder extends MiodBaseListener {
 
     @Override
     public void enterCompUnit(CompUnitContext ctx) {
-        NodeLocation rootLoc = ParserUtils.locationFromContext(ctx, rootUrl);
+        NodeLocation rootLoc = ParserUtils.locationFromContext(ctx, unitPath);
         root = new CompUnit(rootLoc, ctx.unitHeader().fullId().getText());
         prevParent = root;
     }
 
     @Override
     public void exitComments(CommentsContext ctx) {
-        NodeLocation loc = ParserUtils.locationFromContext(ctx, rootUrl);
+        NodeLocation loc = ParserUtils.locationFromContext(ctx, unitPath);
         prevParent.getSubnodes().add(new Comment(loc, ctx.getText()));
     }
 
     @Override
     public void exitDocs(DocsContext ctx) {
-        NodeLocation loc = ParserUtils.locationFromContext(ctx, rootUrl);
+        NodeLocation loc = ParserUtils.locationFromContext(ctx, unitPath);
         prevParent.getSubnodes().add(new Doc(loc, ctx.getText()));
     }
 

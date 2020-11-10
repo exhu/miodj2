@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -77,16 +78,18 @@ public class ParsingTests {
     }
 
     @Test
-    public void testAstBuilder() throws IOException, MalformedURLException {
+    public void testAstBuilder() throws IOException, MalformedURLException, URISyntaxException {
         ParsingErrorListener errListener = new ParsingErrorListener();
         URL url = ParserUtils.getUrlFromResource("t1.miod");
-        LOGGER.info(url.toExternalForm());
-        ParseTree tree = ParserUtils.parseSyntax(url.openStream(), errListener);
+        Path unitPath = Paths.get(url.toURI());
+        LOGGER.info(unitPath.toString());
+
+        ParseTree tree = ParserUtils.parseSyntax(Files.newInputStream(unitPath), errListener);
 
         assertTrue(errListener.getErrors().isEmpty());
 
         AstBuilder builder = new AstBuilder();
-        builder.parse(tree, url);
+        builder.parse(tree, unitPath);
         LOGGER.info(builder.getRoot().getName());
         assertEquals("t1", builder.getRoot().getName());
         Comment comments = (Comment) builder.getRoot().getSubnodes().get(0);

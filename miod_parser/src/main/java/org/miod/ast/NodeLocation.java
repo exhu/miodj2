@@ -1,6 +1,6 @@
 package org.miod.ast;
 
-import java.net.URL;
+import java.nio.file.Path;
 
 public final class NodeLocation {
     public static final Point ZERO_POINT = new Point(0, 0);
@@ -22,17 +22,17 @@ public final class NodeLocation {
     public final Point start;
     public final Point end;
     // can be null
-    public final URL url;
+    public final Path path;
 
-    public NodeLocation(Point start, Point end, URL url) {
+    public NodeLocation(Point start, Point end, Path path) {
         this.start = start;
         this.end = end;
-        this.url = url;
+        this.path = path;
     }
 
     @Override
     public String toString() {
-        return String.format("%s(%d,%d - %d,%d)", url != null ? url.toString() : "null", start.line, start.column,
+        return String.format("%s(%d,%d - %d,%d)", path != null ? path.toString() : "null", start.line, start.column,
                 end.line, end.column);
     }
 }

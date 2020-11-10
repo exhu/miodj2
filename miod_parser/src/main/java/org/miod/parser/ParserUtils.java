@@ -3,6 +3,7 @@ package org.miod.parser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Path;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
@@ -42,8 +43,8 @@ public final class ParserUtils {
         return tree;
     }
 
-    public static NodeLocation locationFromContext(ParserRuleContext ctx, URL url) {
+    public static NodeLocation locationFromContext(ParserRuleContext ctx, Path path) {
         return new NodeLocation(new NodeLocation.Point(ctx.start.getLine(), ctx.start.getCharPositionInLine()),
-                new NodeLocation.Point(ctx.stop.getLine(), ctx.stop.getCharPositionInLine()), url);
+                new NodeLocation.Point(ctx.stop.getLine(), ctx.stop.getCharPositionInLine()), path);
     }
 }
