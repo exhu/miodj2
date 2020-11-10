@@ -1,5 +1,9 @@
 package org.miod.semantic;
 
+import java.util.Optional;
+
 public interface UnitResolver {
-    UnitContext resolveUnit(String name);
+    void resolveUnit(UnitContext ctx);
+
+    Optional<UnitContext> getUnit(String name);
 }

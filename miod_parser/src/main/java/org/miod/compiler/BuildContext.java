@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.miod.semantic.UnitContext;
+import org.miod.semantic.UnitResolver;
 
 public interface BuildContext {
     List<Path> getSources();
@@ -22,4 +23,6 @@ public interface BuildContext {
     Optional<Path> unitPathFromName(String unitName);
 
     Path getOutputPath();
+
+    UnitResolver getUnitResolver();
 }

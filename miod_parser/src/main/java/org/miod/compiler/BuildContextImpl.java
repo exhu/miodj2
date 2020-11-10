@@ -9,8 +9,9 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.miod.semantic.UnitContext;
+import org.miod.semantic.UnitResolver;
 
-public final class BuildContextImpl implements BuildContext {
+public final class BuildContextImpl implements BuildContext, UnitResolver {
     private final Set<String> buildTags;
     private final List<Path> importPaths;
     private final Map<String, UnitContext> processedUnits = new HashMap<>();
@@ -54,6 +55,23 @@ public final class BuildContextImpl implements BuildContext {
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public UnitResolver getUnitResolver() {
+        return this;
+    }
+
+    @Override
+    public Optional<UnitContext> getUnit(String name) {
+        return Optional.ofNullable(processedUnits.get(name));
+    }
+
+    @Override
+    public void resolveUnit(UnitContext ctx) {
+        final String name = ctx.getRootNode().getName();
+        assert (processedUnits.get(name) == null);
+        processedUnits.put(name, ctx);
     }
 
     public BuildContextImpl(Set<String> buildTags, List<Path> importPaths, List<Path> sources, Path outputPath) {

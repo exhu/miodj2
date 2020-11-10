@@ -1,9 +1,9 @@
 package org.miod.compiler.errors;
 
-import java.net.URL;
+import java.nio.file.Path;
 
 public final class ReadError extends CompilationError {
-    public ReadError(URL source) {
+    public ReadError(Path source) {
         super(String.format("Cannot read '%s' file.", source.toString()));
     }
 }

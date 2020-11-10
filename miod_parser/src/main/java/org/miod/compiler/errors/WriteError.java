@@ -1,9 +1,9 @@
 package org.miod.compiler.errors;
 
-import java.net.URL;
+import java.nio.file.Path;
 
 public final class WriteError extends CompilationError {
-    public WriteError(URL source) {
+    public WriteError(Path source) {
         super(String.format("Cannot write '%s' file.", source.toString()));
     }
 }
