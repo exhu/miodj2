@@ -4,6 +4,7 @@
 package miod_parser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -111,6 +112,10 @@ public class ParsingTests {
         Optional<Path> unitPath = ctx.unitPathFromName("t1");
         assertTrue(unitPath.isPresent());
         assertEquals(t1Path, unitPath.get());
+        Optional<Path> unitPath2 = ctx.unitPathFromName("nonexisting::aa");
+        assertFalse(unitPath2.isPresent());
+        Optional<Path> unitPath3 = ctx.unitPathFromName("pkgns::t2");
+        assertTrue(unitPath3.isPresent());
     }
 
 }
