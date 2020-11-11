@@ -27,6 +27,9 @@ import org.junit.Test;
 import org.miod.ast.Comment;
 import org.miod.ast.Doc;
 import org.miod.compiler.BuildContextImpl;
+import org.miod.compiler.Frontend;
+import org.miod.compiler.FrontendImpl;
+import org.miod.compiler.ParseResult;
 import org.miod.parser.AstBuilder;
 import org.miod.parser.ParserUtils;
 import org.miod.parser.ParsingErrorListener;
@@ -100,9 +103,8 @@ public class ParsingTests {
     }
 
     @Test
-    public void testBuildContextImplUnitPath() throws URISyntaxException {
-        URL url = ParserUtils.getUrlFromResource("t1.miod");
-        Path t1Path = Path.of(url.toURI());
+    public void testBuildContextImplUnitPath() {
+        Path t1Path = ParserUtils.getPathForResource("t1.miod").get();
         Path t1Root = t1Path.getParent();
         List<Path> importPaths = new ArrayList<>();
         List<Path> sources = new ArrayList<>();
@@ -116,6 +118,21 @@ public class ParsingTests {
         assertFalse(unitPath2.isPresent());
         Optional<Path> unitPath3 = ctx.unitPathFromName("pkgns::t2");
         assertTrue(unitPath3.isPresent());
+    }
+
+    @Test
+    public void testFrontendCheck() {
+        Path t1Path = ParserUtils.getPathForResource("t1.miod").get();
+        Path t1Root = t1Path.getParent();
+        List<Path> importPaths = new ArrayList<>();
+        List<Path> sources = new ArrayList<>();
+        sources.add(t1Path);
+        importPaths.add(t1Root);
+        BuildContextImpl ctx = new BuildContextImpl(new HashSet<>(), importPaths, sources, Paths.get(""));
+        Frontend frontend = new FrontendImpl(ctx);
+        ParseResult result = frontend.check(t1Path);
+        assertTrue(result.isSuccess());
+        assertEquals("t1", result.root.getName());
     }
 
 }

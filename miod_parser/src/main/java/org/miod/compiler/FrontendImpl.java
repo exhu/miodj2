@@ -19,7 +19,7 @@ import org.miod.parser.ParsingErrorListener;
 
 public final class FrontendImpl implements Frontend {
     private static final Logger LOGGER = Logger.getLogger(FrontendImpl.class.getName());
-    private BuildContext buildContext;
+    private final BuildContext buildContext;
 
     @Override
     public SemanticResult analyze(CompUnit unitNode) {
@@ -71,8 +71,7 @@ public final class FrontendImpl implements Frontend {
 
     }
 
-    @Override
-    public void setBuildContext(BuildContext buildContext) {
+    public FrontendImpl(BuildContext buildContext) {
         this.buildContext = buildContext;
     }
 }

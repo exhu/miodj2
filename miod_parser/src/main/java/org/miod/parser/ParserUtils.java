@@ -2,8 +2,10 @@ package org.miod.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
@@ -22,10 +24,19 @@ public final class ParserUtils {
         return inputStream;
     }
 
-    public static URL getUrlFromResource(String fileName) {
+    public static URL getUrlFromResource(String filename) {
         ClassLoader classLoader = ParserUtils.class.getClassLoader();
-        URL url = classLoader.getResource(fileName);
+        URL url = classLoader.getResource(filename);
         return url;
+    }
+
+    public static Optional<Path> getPathForResource(String filename) {
+        URL url = ParserUtils.getUrlFromResource(filename);
+        try {
+            return Optional.of(Path.of(url.toURI()));
+        } catch (URISyntaxException e) {
+            return Optional.empty();
+        }
     }
 
     public static ParseTree parseSyntax(InputStream stream, ANTLRErrorListener listener) throws IOException {

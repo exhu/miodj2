@@ -5,8 +5,6 @@ import java.nio.file.Path;
 import org.miod.ast.CompUnit;
 
 public interface Frontend {
-    void setBuildContext(BuildContext buildContext);
-
     // parse, syntax check phase
     ParseResult check(Path src);
 
