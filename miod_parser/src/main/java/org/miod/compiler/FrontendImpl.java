@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -23,8 +25,7 @@ public final class FrontendImpl implements Frontend {
 
     @Override
     public SemanticResult analyze(CompUnit unitNode) {
-        // TODO Auto-generated method stub
-        return null;
+        return new Analyzer(unitNode).analyze();
     }
 
     @Override
