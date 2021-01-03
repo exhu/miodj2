@@ -182,6 +182,35 @@ static void test_inst_inc_dec_ref() {
     assert(clazz.instance_count == 0);
 }
 
+static void test_inst_weak_inc_dec_ref() {
+    miod_Class clazz;
+    memset(&clazz, 0, sizeof(clazz));
+    clazz.name = "MyClass";
+    clazz.struct_size = sizeof(MyClassWithFieldInst);
+    MyClassWithFieldInst *inst = (MyClassWithFieldInst*)miod_new_instance(&clazz);
+    assert(inst != NULL);
+    assert(clazz.instance_count == 1);
+
+    miod_inst_inc_ref((miod_BaseClassInstance*)inst);
+    miod_inst_inc_weak_ref((miod_BaseClassInstance*)inst);
+
+    assert(inst->base.any_impl.ref_counter == 2);
+    assert(inst->base.any_impl.weak_counter == 1);
+    assert(clazz.instance_count == 1);
+
+    miod_inst_dec_ref((miod_BaseClassInstance**)&inst);
+    assert(inst != NULL);
+    assert(inst->base.any_impl.ref_counter == 1);
+    assert(inst->base.any_impl.clazz->instance_count == 1);
+    miod_inst_dec_ref((miod_BaseClassInstance**)&inst);
+    assert(inst != NULL);
+    assert(clazz.instance_count == 1);
+
+    miod_inst_dec_weak_ref((miod_BaseClassInstance**)&inst);
+    assert(inst == NULL);
+    assert(clazz.instance_count == 0);
+}
+
 static void test_interface_inc_dec_ref() {
     miod_Class clazz;
     memset(&clazz, 0, sizeof(clazz));
@@ -203,6 +232,36 @@ static void test_interface_inc_dec_ref() {
     assert(iface_inst != NULL);
     assert(inst->base.any_impl.ref_counter == 1);
     miod_interface_inst_dec_ref(&iface_inst);
+    assert(iface_inst == NULL);
+    assert(clazz.instance_count == 0);
+}
+
+static void test_interface_weak_inc_dec_ref() {
+    miod_Class clazz;
+    memset(&clazz, 0, sizeof(clazz));
+    clazz.name = "MyClass";
+    clazz.struct_size = sizeof(MyClassWithFieldInst);
+
+    miod_BaseVtbl iface1_vtbl = {offsetof(MyClassWithFieldInst, iface1)};
+    miod_InterfDesc iface1_desc = {"MyInterf", &iface1_vtbl};
+    miod_InterfDesc *descs[] = {&iface1_desc, NULL};
+    clazz.interfaces = descs;
+
+    MyClassWithFieldInst *inst = (MyClassWithFieldInst*)miod_new_instance(&clazz);
+    assert(inst != NULL);
+    assert(clazz.instance_count == 1);
+    miod_BaseInterfaceInstance *iface_inst = &(inst->iface1);
+    miod_interface_inst_inc_ref(iface_inst);
+    miod_interface_inst_inc_weak_ref(iface_inst);
+    assert(inst->base.any_impl.ref_counter == 2);
+    assert(inst->base.any_impl.weak_counter == 1);
+    miod_interface_inst_dec_ref(&iface_inst);
+    assert(iface_inst != NULL);
+    assert(inst->base.any_impl.ref_counter == 1);
+    miod_interface_inst_dec_ref(&iface_inst);
+    assert(iface_inst != NULL);
+    assert(clazz.instance_count == 1);
+    miod_interface_inst_dec_weak_ref(&iface_inst);
     assert(iface_inst == NULL);
     assert(clazz.instance_count == 0);
 }
@@ -248,5 +307,7 @@ int main() {
     test_inst_inc_dec_ref();
     test_interface_inc_dec_ref();
     test_same_class();
+    test_inst_weak_inc_dec_ref();
+    test_interface_weak_inc_dec_ref();
     return 0;
 }

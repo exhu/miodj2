@@ -59,9 +59,13 @@ void miod_inst_dec_ref(miod_BaseClassInstance **pinst) {
         if (destroy_proc != NULL) {
             destroy_proc(inst);
         }
-        free(inst);
-        *pinst = NULL;
-        clazz->instance_count--;
+
+        if (inst->any_impl.weak_counter == 0) {
+            free(inst);
+            *pinst = NULL;
+            clazz->instance_count--;
+        }
+
     }
 }
 
@@ -73,6 +77,36 @@ void miod_interface_inst_inc_ref(miod_BaseInterfaceInstance *iinst) {
 void miod_interface_inst_dec_ref(miod_BaseInterfaceInstance **piinst) {
     miod_BaseClassInstance *inst = miod_class_instance_from_interface(*piinst);
     miod_inst_dec_ref(&inst);
+    if (inst == NULL)
+    {
+        *piinst = NULL;
+    }
+}
+
+void miod_inst_inc_weak_ref(miod_BaseClassInstance *inst) {
+    inst->any_impl.weak_counter++;
+}
+
+void miod_inst_dec_weak_ref(miod_BaseClassInstance **pinst) {
+    miod_BaseClassInstance *inst = *pinst;
+    miod_Class *clazz = inst->any_impl.clazz;
+    inst->any_impl.weak_counter--;
+    assert(inst->any_impl.weak_counter >= 0);
+    if (inst->any_impl.ref_counter == 0 && inst->any_impl.weak_counter == 0) {
+        free(inst);
+        *pinst = NULL;
+        clazz->instance_count--;
+    }
+}
+
+void miod_interface_inst_inc_weak_ref(miod_BaseInterfaceInstance *iinst) {
+    miod_BaseClassInstance *inst = miod_class_instance_from_interface(iinst);
+    miod_inst_inc_weak_ref(inst);
+}
+
+void miod_interface_inst_dec_weak_ref(miod_BaseInterfaceInstance **piinst) {
+    miod_BaseClassInstance *inst = miod_class_instance_from_interface(*piinst);
+    miod_inst_dec_weak_ref(&inst);
     if (inst == NULL)
     {
         *piinst = NULL;

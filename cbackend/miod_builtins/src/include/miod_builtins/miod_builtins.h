@@ -84,6 +84,11 @@ void miod_inst_dec_ref(miod_BaseClassInstance **pinst);
 void miod_interface_inst_inc_ref(miod_BaseInterfaceInstance *iinst);
 void miod_interface_inst_dec_ref(miod_BaseInterfaceInstance **piinst);
 
+void miod_inst_inc_weak_ref(miod_BaseClassInstance *inst);
+void miod_inst_dec_weak_ref(miod_BaseClassInstance **pinst);
+void miod_interface_inst_inc_weak_ref(miod_BaseInterfaceInstance *iinst);
+void miod_interface_inst_dec_weak_ref(miod_BaseInterfaceInstance **piinst);
+
 // returns NULL or interface desc.,
 // To support generics one must provide interface name with classes names for args.
 miod_InterfDesc* miod_interface_desc_from_class(miod_BaseClassInstance *inst,

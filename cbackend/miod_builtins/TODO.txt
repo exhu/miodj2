@@ -1,16 +1,16 @@
 + generics is emulated only with class/interface names containing argument types names,
     no need to support in runtime. Compiler-side only.
 + add runtime generic types to instance to allow safe upcasting form Object to Some$<a,b>
-    - implement via embidding into class name
+    - implement via embedding into class name
 + research scripts to generate C code structures
     + use java + StringTemplate
++ weak references
 - string, int, float etc. wrapper classes
     - string
     - int
 - optional value class
     - empty
     - value
-- weak references
 - enums
     - enum = interface + static class instances
 - properties
