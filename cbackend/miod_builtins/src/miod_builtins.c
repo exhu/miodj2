@@ -44,6 +44,7 @@ miod_BaseClassInstance *miod_class_instance_from_interface(miod_BaseInterfaceIns
 }
 
 void miod_inst_inc_ref(miod_BaseClassInstance *inst) {
+    assert(inst->any_impl.ref_counter > 0);
     inst->any_impl.ref_counter++;
 }
 
