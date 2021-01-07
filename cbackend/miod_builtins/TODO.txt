@@ -1,5 +1,7 @@
 + generics is emulated only with class/interface names containing argument types names,
-    no need to support in runtime. Compiler-side only.
+    no need to support in runtime. Compiler-side only. First implementation will
+    generate only one class/interface description for all generic variants. So wrong
+    casting is possilbe, one should check returned class/interface directly.
 + add runtime generic types to instance to allow safe upcasting form Object to Some$<a,b>
     - implement via embedding into class name
 + research scripts to generate C code structures
