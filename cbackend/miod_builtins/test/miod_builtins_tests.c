@@ -306,6 +306,26 @@ void test_string_from_cstr() {
     assert(miod_cls_String.instance_count == 0);
 }
 
+void test_miod_result() {
+    miod_String *okstr = miod_String_from_cstr("ok");
+    miod_String *errstr = miod_String_from_cstr("error");
+    assert(miod_cls_String.instance_count == 2);
+    miod_Result *okres = miod_Result_ok((miod_BaseClassInstance*)okstr);
+    assert(okres->enum_tag == miod_ResultTag_Ok);
+    assert(okres->value == &okstr->base);
+    assert(okstr->base.any_impl.ref_counter == 2);
+    miod_Result *errorres = miod_Result_error((miod_BaseClassInstance*)errstr);
+    assert(errorres->enum_tag == miod_ResultTag_Error);
+    assert(errorres->value == &errstr->base);
+    assert(errstr->base.any_impl.ref_counter == 2);
+    miod_inst_dec_ref((miod_BaseClassInstance**)&okstr);
+    miod_inst_dec_ref((miod_BaseClassInstance**)&errstr);
+    miod_inst_dec_ref((miod_BaseClassInstance**)&okres);
+    miod_inst_dec_ref((miod_BaseClassInstance**)&errorres);
+    assert(miod_cls_String.instance_count == 0);
+    assert(miod_cls_Result.instance_count == 0);
+}
+
 int main() {
     test_no_interfaces();
     test_no_suitable_interface();
@@ -319,5 +339,6 @@ int main() {
     test_inst_weak_inc_dec_ref();
     test_interface_weak_inc_dec_ref();
     test_string_from_cstr();
+    test_miod_result();
     return 0;
 }

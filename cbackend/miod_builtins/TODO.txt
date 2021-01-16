@@ -1,3 +1,6 @@
+!!! - autorelease pool for functions that construct instances? !!!
+- think over inc/dec ref rules
+
 + generics is emulated only with class/interface names containing argument types names,
     no need to support in runtime. Compiler-side only. First implementation will
     generate only one class/interface description for all generic variants. So wrong

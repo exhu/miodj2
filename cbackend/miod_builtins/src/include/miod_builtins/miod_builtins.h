@@ -105,20 +105,43 @@ bool miod_is_same_class(miod_Class *clazz_a, miod_Class *clazz_b);
 
 
 // some standard types which cannot be implemented in Miod itself (wrappers for value types etc.)
+/// Integer
 typedef struct {
     miod_BaseClassInstance base;
     int32_t value;
 } miod_Integer;
 
-extern miod_Class miod_cls_Integer;
+miod_Integer* miod_Integer_from_cint(int32_t value);
 
+
+/// String
+extern miod_Class miod_cls_String;
 typedef struct {
     miod_BaseClassInstance base;
     const char *value;
     int32_t len;
 } miod_String;
 
-extern miod_Class miod_cls_String;
-
 // initialize with a copy of src string data
 miod_String* miod_String_from_cstr(const char *src);
+
+
+/// Result, TODO to/from string interfaces?
+extern miod_Class miod_cls_Result;
+
+typedef enum {
+    miod_ResultTag_Uninitialized,
+    miod_ResultTag_Ok,
+    miod_ResultTag_Error,
+} miod_ResultTag;
+
+typedef struct {
+    miod_BaseClassInstance base;
+    miod_ResultTag enum_tag;
+    // result instance or error instance
+    miod_BaseClassInstance *value;
+} miod_Result;
+
+
+miod_Result *miod_Result_ok(miod_BaseClassInstance *ok_value);
+miod_Result *miod_Result_error(miod_BaseClassInstance *error_value);
