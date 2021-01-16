@@ -296,6 +296,15 @@ static void test_same_class() {
     assert(miod_is_same_class(&clazz_a, &clazz_d) == true);
 }
 
+void test_string_from_cstr() {
+    assert(miod_cls_String.instance_count == 0);
+    miod_String *s = miod_String_from_cstr("hello");
+    assert(miod_cls_String.instance_count == 1);
+    assert(strcmp(s->value, "hello") == 0);
+    assert(strlen(s->value) == 5);
+    miod_inst_dec_ref((miod_BaseClassInstance**)&s);
+    assert(miod_cls_String.instance_count == 0);
+}
 
 int main() {
     test_no_interfaces();
@@ -309,5 +318,6 @@ int main() {
     test_same_class();
     test_inst_weak_inc_dec_ref();
     test_interface_weak_inc_dec_ref();
+    test_string_from_cstr();
     return 0;
 }

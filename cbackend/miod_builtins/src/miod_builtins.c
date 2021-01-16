@@ -1,6 +1,7 @@
 #include "miod_builtins/miod_builtins.h"
 
 #include <assert.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -152,4 +153,44 @@ bool miod_is_same_class(miod_Class *clazz_a, miod_Class *clazz_b) {
         strcmp(clazz_a->name, clazz_b->name) == 0) return true;
 
     return false;
+}
+
+// standard types
+// TODO AsHash, AsString interfaces?
+miod_Class miod_cls_Integer = {
+    name: "Integer",
+    interfaces: NULL,
+    properties: NULL,
+    init_proc: NULL,
+    destroy_proc: NULL,
+    struct_size: sizeof(miod_Integer),
+    instance_count: 0,
+};
+
+static void miod_String_destroy_proc(miod_BaseClassInstance *inst);
+miod_Class miod_cls_String = {
+    name: "String",
+    interfaces: NULL,
+    // TODO declare 'len' property?
+    properties: NULL,
+    init_proc: NULL,
+    destroy_proc: miod_String_destroy_proc,
+    struct_size: sizeof(miod_String),
+    instance_count: 0,
+};
+
+static void miod_String_destroy_proc(miod_BaseClassInstance *binst) {
+    miod_String *inst = (miod_String*)binst;
+    free((void*)(inst->value));
+}
+
+miod_String* miod_String_from_cstr(const char *src) {
+    miod_String *inst = (miod_String*)miod_new_instance(&miod_cls_String);
+    assert(inst->value == NULL);
+    const size_t len = strlen(src);
+    assert(len <= INT32_MAX);
+    inst->len = (int32_t)len;
+    char *copystr = (char*)malloc(len);
+    strcpy(copystr, src);
+    inst->value = copystr;
 }

@@ -102,3 +102,23 @@ miod_BaseInterfaceInstance* miod_interface_from_class(miod_BaseClassInstance *in
 // different precompiled packages.
 // NULL class pointers are not supported!
 bool miod_is_same_class(miod_Class *clazz_a, miod_Class *clazz_b);
+
+
+// some standard types which cannot be implemented in Miod itself (wrappers for value types etc.)
+typedef struct {
+    miod_BaseClassInstance base;
+    int32_t value;
+} miod_Integer;
+
+extern miod_Class miod_cls_Integer;
+
+typedef struct {
+    miod_BaseClassInstance base;
+    const char *value;
+    int32_t len;
+} miod_String;
+
+extern miod_Class miod_cls_String;
+
+// initialize with a copy of src string data
+miod_String* miod_String_from_cstr(const char *src);
