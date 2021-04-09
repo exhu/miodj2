@@ -1,3 +1,5 @@
+- [ ] WIP! java generator prototype for classes in cbackend/jgen with cmake
+- [x] builtins usage example with cmake in cbackend/builtins_usage2
 - [ ] Implement interfaces and RTTI in C
     - [x] interfaces
     - [x] classes
