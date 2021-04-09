@@ -1,3 +1,12 @@
+> reference counting memory management:
+    - if a refcounted instance is returned, it must be explicitly dec_ref'ed by the caller
+    - if a getter returns a reference, it must be inc_ref'ed before return.
+    - field access increments ref (e.g. when passing field value as an argument),
+    because it can be modified inside a function call, and object will be released with dangling ref.
+
+- think over inc/dec ref rules
+- finish gen_enum.py
+
 + generics is emulated only with class/interface names containing argument types names,
     no need to support in runtime. Compiler-side only. First implementation will
     generate only one class/interface description for all generic variants. So wrong
@@ -8,13 +17,14 @@
     + use java + StringTemplate
 + weak references
 - string, int, float etc. wrapper classes
-    - string
-    - int
+    + string (basic implementation)
+    + int
 - optional value class
     - empty
     - value
 - enums
-    - enum = interface + static class instances
+    - enum = interface + static class instances  OR like in Rust -- union with tag?
+
 - properties
 - metadata (runtime annotations)
 - abi stability (backwards compatibility with older binaries for dylibs)
