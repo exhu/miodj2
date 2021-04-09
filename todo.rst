@@ -1,3 +1,6 @@
+- cmake driven build process: 1) generate initial project (CMakeLists.txt)
+with java, put default path to builtins, 2) use cmake to compile, call java
+generator etc.
 - [ ] WIP! java generator prototype for classes in cbackend/jgen with cmake
 - [x] builtins usage example with cmake in cbackend/builtins_usage2
 - [ ] Implement interfaces and RTTI in C
