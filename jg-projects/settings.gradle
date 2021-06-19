@@ -9,4 +9,4 @@
 
 rootProject.name = 'miodj2'
 
-include 'miod_parser'
+include 'miod-parser'
